@@ -1,10 +1,8 @@
 package de.hpi.bclab.jchain;
 
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,12 +13,16 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.hpi.bclab.jchain.cli.Cli;
-import de.hpi.bclab.jchain.core.Block;
-import de.hpi.bclab.jchain.core.Transaction;
-import de.hpi.bclab.jchain.managers.PeerManager;
-import de.hpi.bclab.jchain.managers.StateManager;
+import de.hpi.bclab.jchain.cli.Command;
+import de.hpi.bclab.jchain.cli.CommandManager;
+import de.hpi.bclab.jchain.consensus.ConsensusManager;
+import de.hpi.bclab.jchain.message.ConsensusMessage;
+import de.hpi.bclab.jchain.message.Transaction;
+import de.hpi.bclab.jchain.net.messaging.MessagingManager;
 import de.hpi.bclab.jchain.net.peering.Peer;
-import de.hpi.bclab.jchain.net.peering.PeerDiscovery;
+import de.hpi.bclab.jchain.net.peering.PeerManager;
+import de.hpi.bclab.jchain.statemachine.State;
+import de.hpi.bclab.jchain.statemachine.accountmodel.AccountState;
 
 /**
  *
@@ -38,33 +40,35 @@ public class App
         //CONFIG
         Configuration config = new Cli(args).parse();
     	
-        //SHARED RESOURCES
+        //STATE
+        State state;
+        switch (config.getString("statemodel")) {
+        	case "accounts":
+        		state = new AccountState();
+        	default:
+        		state = new AccountState();
+        }
+        		
+        //SHARED RESOURCES for PRODUCER / CONSUMER DESIGN PATTERN
         List<Peer> peers = Collections.synchronizedList(new ArrayList<Peer>());
-    	LinkedBlockingQueue<Block> blockPool = new LinkedBlockingQueue<Block>();
     	LinkedBlockingQueue<Transaction> txPool = new LinkedBlockingQueue<Transaction>();
+    	LinkedBlockingQueue<ConsensusMessage> cnsPool = new LinkedBlockingQueue<ConsensusMessage>();
+    	LinkedBlockingQueue<Command> cmdPool = new LinkedBlockingQueue<Command>();
         
-    	//THREADING
+    	//THREAD POOL
 		ExecutorService executor = Executors.newCachedThreadPool();
     	
     	//PEERING
-        PeerManager net;
-        try {
-    		executor.execute(new PeerManager(config.getInt("port"), config.getString("group"), peers));
-		} catch (UnknownHostException e) {
-			log.error("Failed to start NetManager");
-			log.debug(e);
-		}
+    	executor.execute(new PeerManager(config, peers));
         
-        //STATE
-        StateManager state;
-        try {
-        	executor.execute(new StateManager(config.getString("db"), peers));
-        } catch (Exception e) {
-        	log.error("Failed to start StateManager");
-        	log.debug(e);
-        }
+        //MESSAGING
+    	executor.execute(new MessagingManager(config, peers, txPool, cnsPool, cmdPool));
         
-        //RPC CONTROL
+        //CONSENSUS
+        executor.execute(new ConsensusManager(config, state, txPool, cnsPool));
+        
+        //CLI/RPC CONTROL
+        executor.execute(new CommandManager(config, state, cmdPool));
         
     }
 }

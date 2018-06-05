@@ -1,4 +1,4 @@
-package de.hpi.bclab.jchain.net.peering;
+package de.hpi.bclab.jchain.net.peering.multicast;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -10,14 +10,16 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
+import de.hpi.bclab.jchain.net.peering.Peer;
+
 /**
- * PeerDiscovery is responsible for listening to the {@link PeerAnnouncement} Multicast group and handing received packets to a new {@link PeerHandler} Thread 
+ * PeerDiscovery is responsible for listening to the {@link MulticastAnnouncement} Multicast group and handing received packets to a new {@link AnnouncementHandler} Thread 
  * @author Alexander Mühle
  *
  */
-public class PeerDiscovery implements Runnable{
+public class MulticastDiscovery implements Runnable{
 	
-	private static final Logger log = Logger.getLogger(PeerDiscovery.class.getName());
+	private static final Logger log = Logger.getLogger(MulticastDiscovery.class.getName());
 	
 
 	MulticastSocket socket;
@@ -27,7 +29,7 @@ public class PeerDiscovery implements Runnable{
 	
 	private boolean listening = true;
 	
-	public PeerDiscovery(int port, InetAddress group, List<Peer> peers, MulticastSocket socket) {
+	public MulticastDiscovery(int port, InetAddress group, List<Peer> peers, MulticastSocket socket) {
 		this.peers = peers;
 		this.socket = socket;
 		try {
@@ -51,8 +53,9 @@ public class PeerDiscovery implements Runnable{
 			log.info("Listening to announcements");
 			while(listening) {
 				socket.receive(packet);
+				//spawn handler for received announcement
 		        if (!(packet.getAddress().equals(localHost))) {
-		        	executor.execute(new PeerHandler(peers, packet));
+		        	executor.execute(new AnnouncementHandler(peers, packet));
 		        }
 		    }
 		} catch (Exception e) {

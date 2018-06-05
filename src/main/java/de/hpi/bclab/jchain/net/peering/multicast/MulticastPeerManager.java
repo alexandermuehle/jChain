@@ -1,4 +1,4 @@
-package de.hpi.bclab.jchain.managers;
+package de.hpi.bclab.jchain.net.peering.multicast;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -10,15 +10,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.configuration2.Configuration;
 import org.apache.log4j.Logger;
 
 import de.hpi.bclab.jchain.net.peering.Peer;
-import de.hpi.bclab.jchain.net.peering.PeerAnnouncement;
-import de.hpi.bclab.jchain.net.peering.PeerDiscovery;
+import de.hpi.bclab.jchain.net.peering.PeerManager;
 
-public class PeerManager implements Runnable{
+public class MulticastPeerManager extends PeerManager{
 	
-	private static final Logger log = Logger.getLogger(PeerManager.class.getName());
+	private static final Logger log = Logger.getLogger(MulticastPeerManager.class.getName());
 	
 	/**
 	 * The delay before the first announcement is sent to the network. {@value #INITIAL_DELAY}
@@ -39,33 +39,35 @@ public class PeerManager implements Runnable{
 	 * @param group The InetAddress used for Multicast
 	 * @throws UnknownHostException 
 	 */
-	public PeerManager(int port, String group, List<Peer> peers) throws UnknownHostException {
-		this.port = port;
-		this.group = InetAddress.getByName(group);
-		this.peers = peers;
+	public MulticastPeerManager(Configuration config, List<Peer> peers) {
+		super(config, peers);
+		this.port = config.getInt("port");
+		try {
+			this.group = InetAddress.getByName(config.getString("group"));
+		} catch (UnknownHostException e) {
+			log.error("Failed to recognise multicast group");
+		}
 	}
 	
 	
-	public void run() {
-		log.info("Starting NetManager");
-		
+	public void start() {
+		log.info("Starting Multicast PeerManager");
 		MulticastSocket socket = null;
 		try {
 			socket = new MulticastSocket(port);
 			socket.joinGroup(group);
 		} catch (IOException e) {
 			log.fatal("Failed to join Multicast group");
-			log.debug(e);
 			System.exit(0);
 		}
 		
 		//Schedule multicast announcement
 		ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(1);
-		scheduledExecutor.scheduleWithFixedDelay(new PeerAnnouncement(port, group, socket), INITIAL_DELAY, REPEAT_DELAY, TimeUnit.SECONDS);
+		scheduledExecutor.scheduleWithFixedDelay(new MulticastAnnouncement(port, group, socket), INITIAL_DELAY, REPEAT_DELAY, TimeUnit.SECONDS);
 
-		//Start peer discovery thread
+		//Start multicast peer discovery thread
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		executor.execute(new PeerDiscovery(port, group, peers, socket));
+		executor.execute(new MulticastDiscovery(port, group, super.getPeers(), socket));
 		
 	}
 	
