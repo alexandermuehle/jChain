@@ -54,9 +54,9 @@ public class MulticastDiscovery implements Runnable{
 			while(listening) {
 				socket.receive(packet);
 				//spawn handler for received announcement
-		        if (!(packet.getAddress().equals(localHost))) {
-		        	executor.execute(new AnnouncementHandler(peers, packet));
-		        }
+		        //if (!(packet.getAddress().equals(localHost))) {
+		        executor.execute(new AnnouncementHandler(peers, packet));
+		        //}
 		    }
 		} catch (Exception e) {
 			log.error("Failed to receive peer announcements");

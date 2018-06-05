@@ -31,6 +31,8 @@ public class Cli {
 		options.addOption("c", "config", true, "load config");
 		options.addOption("p", "port", true, "set port");
 		options.addOption("g", "group", true, "set multicast group");
+		options.addOption("pm", "peermode", true, "set peermode");
+		options.addOption("sm", "statemodel", true, "set statemodel");
 		options.addOption("d", "data", true, "set database location");
 
 	}
@@ -67,6 +69,20 @@ public class Cli {
 			}
 			else {
 				config.addProperty("group", "233.0.0.0");
+			}
+			
+			if(cmd.hasOption("pm")) {
+				config.addProperty("peermode", cmd.getOptionValue("pm"));
+			}
+			else {
+				config.addProperty("peermode", "multicast");
+			}
+			
+			if(cmd.hasOption("sm")) {
+				config.addProperty("statemodel", cmd.getOptionValue("sm"));
+			}
+			else {
+				config.addProperty("statemodel", "accounts");
 			}
 			
 			if(cmd.hasOption("d")) {
