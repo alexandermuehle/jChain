@@ -29,7 +29,6 @@ public class MulticastPeerManager extends PeerManager{
 	 */
 	private static final int REPEAT_DELAY = 30;
 
-	private List<Peer> peers;
 	private InetAddress group; //https://www.iana.org/assignments/multicast-addresses/multicast-addresses.xhtml#multicast-addresses-2
 	private int port; //https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=106
 	
