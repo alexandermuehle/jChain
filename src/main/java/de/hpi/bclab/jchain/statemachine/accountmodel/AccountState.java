@@ -2,8 +2,8 @@ package de.hpi.bclab.jchain.statemachine.accountmodel;
 
 import java.util.HashMap;
 
-import de.hpi.bclab.jchain.message.Transaction;
 import de.hpi.bclab.jchain.statemachine.State;
+import de.hpi.bclab.jchain.statemachine.Transaction;
 import de.hpi.bclab.jchain.statemachine.Value;
 
 public class AccountState extends State{

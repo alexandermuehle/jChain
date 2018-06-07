@@ -61,7 +61,7 @@ public class MulticastPeerManager extends PeerManager{
 		}
 		
 		//Schedule multicast announcement
-		ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(1);
+		ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
 		scheduledExecutor.scheduleWithFixedDelay(new MulticastAnnouncement(port, group, socket), INITIAL_DELAY, REPEAT_DELAY, TimeUnit.SECONDS);
 
 		//Start multicast peer discovery thread

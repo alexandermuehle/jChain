@@ -25,5 +25,14 @@ public class Peer {
 		return adr;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (obj == this) return true;
+		if (!(obj instanceof Peer)) return false;
+		
+		Peer test = (Peer) obj;
+		return this.port == test.port && this.adr.equals(test.getAdr());
+	}
 
 }

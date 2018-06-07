@@ -30,6 +30,8 @@ public class Cli {
 		options.addOption("h", "help", false, "show help.");
 		options.addOption("c", "config", true, "load config");
 		options.addOption("p", "port", true, "set port");
+		options.addOption("rp", "rpcport", true, "set rpcport");
+		options.addOption("rpc", "rpcport", false, "set rpc enabled");
 		options.addOption("g", "group", true, "set multicast group");
 		options.addOption("pm", "peermode", true, "set peermode");
 		options.addOption("sm", "statemodel", true, "set statemodel");
@@ -54,7 +56,13 @@ public class Cli {
 			}
 			else {
 				config = new PropertiesConfiguration();
-				
+			}
+			
+			if(cmd.hasOption("rpc")) {
+				config.addProperty("rpc", true);
+			}
+			else {
+				config.addProperty("rpc", false);
 			}
 			
 			if(cmd.hasOption("p")) {
@@ -62,6 +70,13 @@ public class Cli {
 			}
 			else {
 				config.addProperty("port", 7499);
+			}
+			
+			if(cmd.hasOption("rp")) {
+				config.addProperty("rpcport", cmd.getOptionValue("rp"));
+			}
+			else {
+				config.addProperty("rpcport", 7498);
 			}
 			
 			if(cmd.hasOption("g")) {

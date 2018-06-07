@@ -4,7 +4,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.commons.configuration2.Configuration;
 
-import de.hpi.bclab.jchain.message.Transaction;
+import de.hpi.bclab.jchain.statemachine.Transaction;
 
 public class RequestManager implements Runnable{
 

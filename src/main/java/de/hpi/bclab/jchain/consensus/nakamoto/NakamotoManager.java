@@ -6,8 +6,8 @@ import org.apache.commons.configuration2.Configuration;
 
 import de.hpi.bclab.jchain.consensus.ConsensusManager;
 import de.hpi.bclab.jchain.message.ConsensusMessage;
-import de.hpi.bclab.jchain.message.Transaction;
 import de.hpi.bclab.jchain.statemachine.State;
+import de.hpi.bclab.jchain.statemachine.Transaction;
 
 public class NakamotoManager extends ConsensusManager {
 

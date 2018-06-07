@@ -13,15 +13,15 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.hpi.bclab.jchain.cli.Cli;
-import de.hpi.bclab.jchain.cli.Command;
 import de.hpi.bclab.jchain.cli.CommandManager;
 import de.hpi.bclab.jchain.consensus.ConsensusManager;
+import de.hpi.bclab.jchain.message.Command;
 import de.hpi.bclab.jchain.message.ConsensusMessage;
-import de.hpi.bclab.jchain.message.Transaction;
 import de.hpi.bclab.jchain.net.messaging.MessagingManager;
 import de.hpi.bclab.jchain.net.peering.Peer;
 import de.hpi.bclab.jchain.net.peering.PeerManager;
 import de.hpi.bclab.jchain.statemachine.State;
+import de.hpi.bclab.jchain.statemachine.Transaction;
 import de.hpi.bclab.jchain.statemachine.accountmodel.AccountState;
 
 /**
