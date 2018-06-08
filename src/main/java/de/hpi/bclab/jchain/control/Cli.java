@@ -1,4 +1,4 @@
-package de.hpi.bclab.jchain.cli;
+package de.hpi.bclab.jchain.control;
 
 
 import org.apache.commons.cli.BasicParser;

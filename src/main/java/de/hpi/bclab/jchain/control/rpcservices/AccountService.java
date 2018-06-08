@@ -1,4 +1,4 @@
-package de.hpi.bclab.jchain.cli;
+package de.hpi.bclab.jchain.control.rpcservices;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -6,15 +6,15 @@ import com.github.arteam.simplejsonrpc.core.annotation.JsonRpcMethod;
 import com.github.arteam.simplejsonrpc.core.annotation.JsonRpcParam;
 import com.github.arteam.simplejsonrpc.core.annotation.JsonRpcService;
 
-import de.hpi.bclab.jchain.message.Command;
-import de.hpi.bclab.jchain.message.TransactionCommand;
+import de.hpi.bclab.jchain.messages.Command;
+import de.hpi.bclab.jchain.messages.TransactionCommand;
 import de.hpi.bclab.jchain.statemachine.accountmodel.AccountTransaction;
 
-public @JsonRpcService class CommandService{
+public @JsonRpcService class AccountService{
 	
 	LinkedBlockingQueue<Command> cmdPool;
 	
-	public CommandService(LinkedBlockingQueue<Command> cmdPool) {
+	public AccountService(LinkedBlockingQueue<Command> cmdPool) {
 		this.cmdPool = cmdPool;
 	}
 	

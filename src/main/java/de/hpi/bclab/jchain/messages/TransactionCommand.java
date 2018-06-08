@@ -1,4 +1,4 @@
-package de.hpi.bclab.jchain.message;
+package de.hpi.bclab.jchain.messages;
 
 import de.hpi.bclab.jchain.statemachine.Transaction;
 

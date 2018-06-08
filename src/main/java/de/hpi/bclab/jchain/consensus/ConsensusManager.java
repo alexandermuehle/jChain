@@ -5,7 +5,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.log4j.Logger;
 
-import de.hpi.bclab.jchain.message.ConsensusMessage;
+import de.hpi.bclab.jchain.messages.ConsensusMessage;
 import de.hpi.bclab.jchain.statemachine.State;
 import de.hpi.bclab.jchain.statemachine.Transaction;
 

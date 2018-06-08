@@ -12,11 +12,11 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import de.hpi.bclab.jchain.cli.Cli;
-import de.hpi.bclab.jchain.cli.CommandManager;
 import de.hpi.bclab.jchain.consensus.ConsensusManager;
-import de.hpi.bclab.jchain.message.Command;
-import de.hpi.bclab.jchain.message.ConsensusMessage;
+import de.hpi.bclab.jchain.control.Cli;
+import de.hpi.bclab.jchain.control.CommandManager;
+import de.hpi.bclab.jchain.messages.Command;
+import de.hpi.bclab.jchain.messages.ConsensusMessage;
 import de.hpi.bclab.jchain.net.messaging.MessagingManager;
 import de.hpi.bclab.jchain.net.peering.Peer;
 import de.hpi.bclab.jchain.net.peering.PeerManager;
