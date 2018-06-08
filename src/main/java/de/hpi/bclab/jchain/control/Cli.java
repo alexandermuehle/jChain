@@ -33,6 +33,7 @@ public class Cli {
 		options.addOption("rp", "rpcport", true, "set rpcport");
 		options.addOption("rpc", "rpcport", false, "set rpc enabled");
 		options.addOption("g", "group", true, "set multicast group");
+		options.addOption("cns", "consensusmode", true, "set consensus mode");
 		options.addOption("pm", "peermode", true, "set peermode");
 		options.addOption("sm", "statemodel", true, "set statemodel");
 		options.addOption("d", "data", true, "set database location");
@@ -84,6 +85,13 @@ public class Cli {
 			}
 			else {
 				config.addProperty("group", "233.0.0.0");
+			}
+			
+			if(cmd.hasOption("cns")) {
+				config.addProperty("consensusmode", cmd.getOptionValue("cns"));
+			}
+			else {
+				config.addProperty("consensusmode", "nakamoto");
 			}
 			
 			if(cmd.hasOption("pm")) {

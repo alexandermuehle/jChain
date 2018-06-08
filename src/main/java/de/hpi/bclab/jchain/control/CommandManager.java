@@ -57,8 +57,7 @@ public class CommandManager implements Runnable{
 			return;
 		}
 		Socket client;
-		boolean isPost;
-		int contentLength;
+		int contentLength = 0;
 		
 		while(listening) {
 			try {
@@ -77,14 +76,12 @@ public class CommandManager implements Runnable{
 				
 				//BODY
 				StringBuilder payload = new StringBuilder();
-		        while(in.ready()){
+		        while(payload.length() < contentLength && in.ready()){
 		            payload.append((char) in.read());
 		        }
-		        log.info("Request: " + payload.toString());
 				String answer = rpcServer.handle(payload.toString(), controlService);
 				
 				//RESPONSE
-				log.info("Response: " + answer);
 		        out.write("HTTP/1.0 200 OK\r\n");
 		        out.write(new Date().toString() + "\r\n");
 		        out.write("Server: jChain/0.0.1\r\n");
@@ -100,8 +97,7 @@ public class CommandManager implements Runnable{
 				log.error("Failed to accept RPC request");
 				e.printStackTrace();
 			}
-		}
-		
+		}		
 		try {
 			socket.close();
 		} catch (IOException e) {

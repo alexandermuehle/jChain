@@ -17,5 +17,10 @@ public class AccountTransaction extends Transaction{
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	public String toString() {
+		return "Transaction to: " + receiver + " with value: " + value;
+	}
 
 }
