@@ -21,11 +21,11 @@ public class AnnouncementHandler implements Runnable{
 
 	@Override
 	public void run() {
-		log.info("Handler received Announcement from " + packet.getAddress());
 		Peer peer = new Peer(packet.getPort(), packet.getAddress());
 		if(!peers.contains(peer)) {
 			peers.add(peer);
 		}
+		log.debug("Handler received Announcement from " + peer);
 	}
 
 }

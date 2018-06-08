@@ -27,10 +27,9 @@ public class MulticastAnnouncement implements Runnable{
 		try {
 			DatagramPacket packet = new DatagramPacket(msg, msg.length, group, port);
 			socket.send(packet);
-			log.info("Sending PeerAnnouncement: " + packet);
+			log.debug("Sending PeerAnnouncement: " + packet);
 		} catch (IOException e) {
 			log.error("Failed to send PeerAnnouncement Multicast");
-			log.debug(e);
 		} 
 	}
 

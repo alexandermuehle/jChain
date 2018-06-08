@@ -22,7 +22,7 @@ public class NakamotoManager extends ConsensusManager {
 	public void start() {
 		log.info("Starting Nakamoto ConsensusManager");
 		try {
-			log.info("Processing " + super.getTxPool().take());
+			log.debug("Processing " + super.getTxPool().take());
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

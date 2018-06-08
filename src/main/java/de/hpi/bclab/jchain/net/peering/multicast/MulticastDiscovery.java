@@ -36,7 +36,6 @@ public class MulticastDiscovery implements Runnable{
 			localHost = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
 		  	log.fatal("Failed identifying local host");
-		   	e.printStackTrace(); 
 		   	System.exit(1);
 		}
 	}
@@ -60,8 +59,6 @@ public class MulticastDiscovery implements Runnable{
 		    }
 		} catch (Exception e) {
 			log.error("Failed to receive peer announcements");
-			log.debug(e);
-			e.printStackTrace();
 		} 
 	}
 

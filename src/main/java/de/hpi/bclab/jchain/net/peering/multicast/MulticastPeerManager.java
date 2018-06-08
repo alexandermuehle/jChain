@@ -16,6 +16,17 @@ import org.apache.log4j.Logger;
 import de.hpi.bclab.jchain.net.peering.Peer;
 import de.hpi.bclab.jchain.net.peering.PeerManager;
 
+/**
+ * Vulnerable to eclipse attacks through connection monopolisation because there are only incoming announcments
+ * 		TODO: 
+ * Vulnerable to DoS because we handle unsolicited announcments
+ *  	TODO: ping pong with hash of ping to only receive answers to own announcment
+ *  
+ *  Improve on this maybe http://www.bittorrent.org/beps/bep_0014.html
+ * 
+ * @author Alexander Mühle
+ *
+ */
 public class MulticastPeerManager extends PeerManager{
 	
 	private static final Logger log = Logger.getLogger(MulticastPeerManager.class.getName());
