@@ -9,6 +9,10 @@ import de.hpi.bclab.jchain.statemachine.Value;
 public class AccountState extends State{
 	
 	private HashMap<Account, Value> state;
+	
+	public Value getValue(Account account) {
+		return state.get(account);
+	}
 
 	public void applyTransaction(Transaction tx) {
 		// TODO Auto-generated method stub

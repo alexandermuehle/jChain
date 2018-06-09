@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import com.github.arteam.simplejsonrpc.server.JsonRpcServer;
 
 import de.hpi.bclab.jchain.control.rpcservices.AccountService;
+import de.hpi.bclab.jchain.control.rpcservices.NetworkService;
 import de.hpi.bclab.jchain.messages.Command;
 import de.hpi.bclab.jchain.statemachine.State;
 
@@ -45,7 +46,8 @@ public class CommandManager implements Runnable{
 	public void run() {
 		
 		log.info("Starting CommandManager");
-		AccountService controlService = new AccountService(cmdPool);
+		AccountService accountService = new AccountService(cmdPool, state);
+		NetworkService  networkService = new NetworkService();
 		JsonRpcServer rpcServer = new JsonRpcServer();		
 		
 		//RPC
@@ -79,8 +81,11 @@ public class CommandManager implements Runnable{
 		        while(payload.length() < contentLength && in.ready()){
 		            payload.append((char) in.read());
 		        }
-				String answer = rpcServer.handle(payload.toString(), controlService);
-				
+		        //TODO: switch this properly 
+		        String answer = null; 
+		        if (payload.toString().contains("acc_")) answer = rpcServer.handle(payload.toString(), accountService);
+		        if (payload.toString().contains("net_")) answer = rpcServer.handle(payload.toString(), networkService);
+
 				//RESPONSE
 		        out.write("HTTP/1.0 200 OK\r\n");
 		        out.write(new Date().toString() + "\r\n");
