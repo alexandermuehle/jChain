@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 
 import de.hpi.bclab.jchain.consensus.nakamoto.NakamotoManager;
 import de.hpi.bclab.jchain.messages.ConsensusMessage;
-import de.hpi.bclab.jchain.net.peering.multicast.MulticastPeerManager;
 import de.hpi.bclab.jchain.statemachine.State;
 import de.hpi.bclab.jchain.statemachine.Transaction;
 

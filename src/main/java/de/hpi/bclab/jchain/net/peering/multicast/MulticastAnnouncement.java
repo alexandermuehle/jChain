@@ -25,6 +25,7 @@ public class MulticastAnnouncement implements Runnable{
 	public void run() {
 		byte[] msg = new byte[100]; //TODO: actual announcement
 		try {
+			if(Thread.interrupted()) return; //graceful shutdown
 			DatagramPacket packet = new DatagramPacket(msg, msg.length, group, port);
 			socket.send(packet);
 			log.debug("Sending PeerAnnouncement: " + packet);

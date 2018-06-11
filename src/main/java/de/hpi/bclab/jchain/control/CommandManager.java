@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Date;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -55,6 +56,7 @@ public class CommandManager implements Runnable{
 		ServerSocket socket = null;
 		try {
 			socket = new ServerSocket(rpcPort);
+			socket.setSoTimeout(30000);
 		} catch (IOException e1) {
 			log.error("Failed to open RPC Server Socket");
 			return;
@@ -62,7 +64,7 @@ public class CommandManager implements Runnable{
 		Socket client;
 		int contentLength = 0;
 		
-		while(listening) {
+		while(!Thread.currentThread().isInterrupted()) {
 			try {
 				client = socket.accept();
 				BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -102,12 +104,14 @@ public class CommandManager implements Runnable{
 				in.close();
 				out.close();
 				client.close();
+			} catch (SocketTimeoutException e) {
+				
 			} catch (IOException e) {
 				log.error("Failed to accept RPC request");
-				e.printStackTrace();
-			}
+			} 
 		}		
 		try {
+			log.info("Shutting down Command Manager");
 			socket.close();
 		} catch (IOException e) {
 			log.error("Failed to close RPC Server Socket");

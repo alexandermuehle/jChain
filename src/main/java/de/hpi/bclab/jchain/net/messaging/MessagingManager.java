@@ -43,15 +43,14 @@ public class MessagingManager implements Runnable {
 		//CMD 
 		Command cmd;
 		try {
-			while((cmd = cmdPool.take()) != null) {
+			while((cmd = cmdPool.take()) != null && !Thread.interrupted()) {
 				if (cmd instanceof TransactionCommand) {
 					Transaction tx = ((TransactionCommand) cmd).getTx();
 					txPool.put(tx);
 				}
 			}
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.info("Shutting down Messaging Manager");
 		}
 		
 	}

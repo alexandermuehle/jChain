@@ -21,15 +21,14 @@ public class NakamotoManager extends ConsensusManager {
 	
 	public void start() {
 		log.info("Starting Nakamoto ConsensusManager");
-		while(true) {
+		while(!Thread.currentThread().isInterrupted()) {
 			try {
 				Transaction tx = super.getTxPool().take();
 				log.debug("Processing " + tx);
 				//TODO: get work, consensus etc
 				super.getState().applyTransaction(tx);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.info("Shutting down Nakamoto Consensus Manager");
 			}
 		}
 

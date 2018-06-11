@@ -79,6 +79,24 @@ public class MulticastPeerManager extends PeerManager{
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 		executor.execute(new MulticastDiscovery(port, group, super.getPeers(), socket));
 		
+		while(!Thread.currentThread().isInterrupted()) {
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				break;
+			}
+		}
+		log.info("Shutting down Multicast Announcmenet and Discovery");
+		scheduledExecutor.shutdownNow();
+		executor.shutdownNow();
+		try {
+			scheduledExecutor.awaitTermination(1, TimeUnit.MINUTES);
+			executor.awaitTermination(1, TimeUnit.MINUTES);
+		} catch (InterruptedException ex) {
+			log.error("Failed to shutdown Multicast Announcment and Discovery");
+		}
+
+		
 	}
 	
 	

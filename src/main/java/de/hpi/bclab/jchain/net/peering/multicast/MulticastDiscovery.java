@@ -22,13 +22,11 @@ public class MulticastDiscovery implements Runnable{
 	private static final Logger log = Logger.getLogger(MulticastDiscovery.class.getName());
 	
 
-	MulticastSocket socket;
-	InetAddress localHost;
+	private MulticastSocket socket;
+	private InetAddress localHost;
 	
 	private List<Peer> peers;
-	
-	private boolean listening = true;
-	
+		
 	public MulticastDiscovery(int port, InetAddress group, List<Peer> peers, MulticastSocket socket) {
 		this.peers = peers;
 		this.socket = socket;
@@ -50,7 +48,7 @@ public class MulticastDiscovery implements Runnable{
 			packet = new DatagramPacket(buff, buff.length);
 			ExecutorService executor = Executors.newCachedThreadPool();
 			log.info("Listening to announcements");
-			while(listening) {
+			while(!Thread.currentThread().isInterrupted()) {
 				socket.receive(packet);
 				//spawn handler for received announcement
 		        //if (!(packet.getAddress().equals(localHost))) {

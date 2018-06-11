@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.log4j.Level;
@@ -36,6 +37,7 @@ public class App
     {
         System.out.println( "Hello jChain!" );
         log.setLevel(Level.DEBUG);
+        
         
         //CONFIG
         Configuration config = new Cli(args).parse();
@@ -69,6 +71,18 @@ public class App
         
         //CLI/RPC CONTROL
         executor.execute(new CommandManager(config, state, cmdPool));
+        
+//        Runtime.getRuntime().addShutdownHook(new Thread() {
+//        	public void run() {
+//        		log.info("Shutting down...");
+//        		executor.shutdownNow();
+//        		try {
+//					System.out.println(executor.awaitTermination(1, TimeUnit.MINUTES));
+//				} catch (InterruptedException e) {
+//					log.error("Couldn't wait for termination of all threads");
+//				}
+//        	}
+//        });
         
     }
 }
