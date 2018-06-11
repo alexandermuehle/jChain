@@ -20,6 +20,7 @@ public @JsonRpcService class AccountService{
 	
 	public AccountService(LinkedBlockingQueue<Command> cmdPool, State state) {
 		this.cmdPool = cmdPool;
+		this.state = state;
 	}
 	
 	public @JsonRpcMethod boolean acc_send(@JsonRpcParam("to") int receiver, @JsonRpcParam("value") int value) {
@@ -31,8 +32,9 @@ public @JsonRpcService class AccountService{
 		return true;
 	}
 	
-	public @JsonRpcMethod int acc_balance(@JsonRpcParam("id") int id) {
+	public @JsonRpcMethod Long acc_balance(@JsonRpcParam("id") int id) {
 		AccountState accState = (AccountState) state;
-		return accState.getValue(new Account(id)).getValue();
+		Account acc = new Account(id);
+		return accState.getValue(acc);
 	}
 }

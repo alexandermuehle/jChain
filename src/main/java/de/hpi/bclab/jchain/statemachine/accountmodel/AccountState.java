@@ -4,18 +4,22 @@ import java.util.HashMap;
 
 import de.hpi.bclab.jchain.statemachine.State;
 import de.hpi.bclab.jchain.statemachine.Transaction;
-import de.hpi.bclab.jchain.statemachine.Value;
 
 public class AccountState extends State{
 	
-	private HashMap<Account, Value> state;
+	private HashMap<Account, Long> state;
 	
-	public Value getValue(Account account) {
+	public AccountState() {
+		this.state = new HashMap<Account, Long>();
+	}
+	
+	public Long getValue(Account account) {
 		return state.get(account);
 	}
 
 	public void applyTransaction(Transaction tx) {
-		// TODO Auto-generated method stub
+		AccountTransaction atx = (AccountTransaction) tx;
+		state.put(atx.getReceiver(), state.getOrDefault(atx.getReceiver(), (long) 0) + atx.getValue());
 	}
 	
 	public boolean verifyTransaction(Transaction tx) {

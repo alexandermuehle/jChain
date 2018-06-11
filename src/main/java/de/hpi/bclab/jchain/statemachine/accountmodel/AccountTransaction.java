@@ -4,18 +4,26 @@ import de.hpi.bclab.jchain.statemachine.Transaction;
 
 public class AccountTransaction extends Transaction{
 	
-	int receiver; //TODO: ID
-	int value; //TODO: value
+	Account receiver; //TODO: ID
+	Long value; //TODO: value
 
 	public AccountTransaction(int receiver, int value) {
-		this.receiver = receiver;
-		this.value = value;
+		this.receiver = new Account(receiver);
+		this.value = (long) value;
 	}
 	
 	@Override
 	public boolean validateTransaction() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public Account getReceiver() {
+		return receiver;
+	}
+	
+	public Long getValue() {
+		return value;
 	}
 	
 	@Override

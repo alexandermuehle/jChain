@@ -38,6 +38,7 @@ public class CommandManager implements Runnable{
 
 	public CommandManager(Configuration config, State state, LinkedBlockingQueue<Command> cmdPool) {
 		this.cmdPool = cmdPool;
+		this.state = state;
 		this.listening = config.getBoolean("rpc");
 		this.rpcPort = config.getInt("rpcport");
 	}
@@ -82,9 +83,12 @@ public class CommandManager implements Runnable{
 		            payload.append((char) in.read());
 		        }
 		        //TODO: switch this properly 
-		        String answer = null; 
+		        String answer = ""; 
 		        if (payload.toString().contains("acc_")) answer = rpcServer.handle(payload.toString(), accountService);
-		        if (payload.toString().contains("net_")) answer = rpcServer.handle(payload.toString(), networkService);
+		        else if (payload.toString().contains("net_")) answer = rpcServer.handle(payload.toString(), networkService);
+		        else {
+		        	answer = rpcServer.handle(payload.toString(), accountService);
+		        }
 
 				//RESPONSE
 		        out.write("HTTP/1.0 200 OK\r\n");
