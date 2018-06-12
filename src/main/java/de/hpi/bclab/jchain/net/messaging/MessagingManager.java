@@ -33,12 +33,10 @@ public class MessagingManager implements Runnable {
 	@Override
 	public void run() {
 		
-		log.info("Starting MessagingManager");
-		
-		//CLIENT THREAD
-		
-		
+		log.info("Starting Messaging Manager");
+			
 		//SERVER THREAD
+		
 		
 		//CMD 
 		Command cmd;
@@ -47,11 +45,16 @@ public class MessagingManager implements Runnable {
 				if (cmd instanceof TransactionCommand) {
 					Transaction tx = ((TransactionCommand) cmd).getTx();
 					txPool.put(tx);
+					send(tx);
 				}
 			}
 		} catch (InterruptedException e) {
 			log.info("Shutting down Messaging Manager");
 		}
+		
+	}
+	
+	private void send(Transaction tx) {
 		
 	}
 

@@ -9,6 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.commons.configuration2.Configuration;
@@ -19,6 +20,7 @@ import com.github.arteam.simplejsonrpc.server.JsonRpcServer;
 import de.hpi.bclab.jchain.control.rpcservices.AccountService;
 import de.hpi.bclab.jchain.control.rpcservices.NetworkService;
 import de.hpi.bclab.jchain.messages.Command;
+import de.hpi.bclab.jchain.net.peering.Peer;
 import de.hpi.bclab.jchain.statemachine.State;
 
 /**
@@ -34,11 +36,13 @@ public class CommandManager implements Runnable{
 	
 	private State state;
 	private LinkedBlockingQueue<Command> cmdPool;
+	private List<Peer> peers;
 	private boolean listening;
 	private int rpcPort;
 
-	public CommandManager(Configuration config, State state, LinkedBlockingQueue<Command> cmdPool) {
+	public CommandManager(Configuration config, State state, LinkedBlockingQueue<Command> cmdPool, List<Peer> peers) {
 		this.cmdPool = cmdPool;
+		this.peers = peers;
 		this.state = state;
 		this.listening = config.getBoolean("rpc");
 		this.rpcPort = config.getInt("rpcport");
@@ -49,7 +53,7 @@ public class CommandManager implements Runnable{
 		
 		log.info("Starting CommandManager");
 		AccountService accountService = new AccountService(cmdPool, state);
-		NetworkService  networkService = new NetworkService();
+		NetworkService  networkService = new NetworkService(peers);
 		JsonRpcServer rpcServer = new JsonRpcServer();		
 		
 		//RPC
