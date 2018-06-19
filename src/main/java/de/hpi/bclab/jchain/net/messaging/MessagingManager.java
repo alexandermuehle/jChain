@@ -45,6 +45,7 @@ public class MessagingManager implements Runnable {
 		//SERVER THREAD
 		executor.execute(new MessagingServer(txPool, cnsPool, 7499));
 		
+		
 		//CMD 
 		Command cmd;
 		try {
@@ -75,6 +76,7 @@ public class MessagingManager implements Runnable {
 			log.error("Failed to open Messaging Manager Socket");
 			e.printStackTrace();
 		}
+
 	}
 
 }

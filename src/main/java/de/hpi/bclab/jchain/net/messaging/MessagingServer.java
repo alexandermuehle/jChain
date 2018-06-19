@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import de.hpi.bclab.jchain.messages.ConsensusMessage;
 import de.hpi.bclab.jchain.statemachine.Transaction;
 
+
 public class MessagingServer implements Runnable {
 	
 	private static final Logger log = Logger.getLogger(MessagingServer.class.getName());
