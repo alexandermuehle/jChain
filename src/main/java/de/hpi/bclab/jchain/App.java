@@ -70,7 +70,7 @@ public class App
         executor.execute(new ConsensusManager(config, state, txPool, cnsPool));
         
         //CLI/RPC CONTROL
-        executor.execute(new CommandManager(config, state, cmdPool));
+        executor.execute(new CommandManager(config, state, cmdPool, peers));
         
 //        Runtime.getRuntime().addShutdownHook(new Thread() {
 //        	public void run() {

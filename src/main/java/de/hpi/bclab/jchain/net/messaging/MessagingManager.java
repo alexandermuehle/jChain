@@ -1,6 +1,11 @@
 package de.hpi.bclab.jchain.net.messaging;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.log4j.Logger;
@@ -33,12 +38,12 @@ public class MessagingManager implements Runnable {
 	@Override
 	public void run() {
 		
-		log.info("Starting MessagingManager");
+		log.info("Starting Messaging Manager");
 		
-		//CLIENT THREAD
-		
-		
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+
 		//SERVER THREAD
+		executor.execute(new MessagingServer(txPool, cnsPool, 7499));
 		
 		//CMD 
 		Command cmd;
@@ -47,12 +52,29 @@ public class MessagingManager implements Runnable {
 				if (cmd instanceof TransactionCommand) {
 					Transaction tx = ((TransactionCommand) cmd).getTx();
 					txPool.put(tx);
+					send(tx);
 				}
 			}
 		} catch (InterruptedException e) {
 			log.info("Shutting down Messaging Manager");
 		}
 		
+	}
+	
+	private void send(Transaction tx) {
+		Socket clientSocket = null;
+		try {
+			for (Peer peer : peers) {
+				log.info("Sending " + tx + " to" + peer);
+				clientSocket = new Socket(peer.getAdr(), peer.getPort());
+				ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
+				out.writeObject(tx); //TODO serialise correctly
+				clientSocket.close();
+			}
+		} catch (IOException e) {
+			log.error("Failed to open Messaging Manager Socket");
+			e.printStackTrace();
+		}
 	}
 
 }
