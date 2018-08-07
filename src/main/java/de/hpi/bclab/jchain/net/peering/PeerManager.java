@@ -20,16 +20,13 @@ public class PeerManager implements Runnable{
 		switch(config.getString("peermode")) {
 			case "multicast":
 				new MulticastPeerManager(config, peers).start();
+			case "simple_unstructured":
+				new UnstructuredPeerManager(config, peers).start();
 		}
 	}
-
+	
 	public List<Peer> getPeers() {
 		return peers;
 	}
-
-	public Configuration getConfig() {
-		return config;
-	}
-
 		
 }

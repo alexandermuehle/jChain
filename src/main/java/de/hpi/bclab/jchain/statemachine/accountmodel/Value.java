@@ -1,4 +1,4 @@
-package de.hpi.bclab.jchain.statemachine;
+package de.hpi.bclab.jchain.statemachine.accountmodel;
 
 public class Value {
 	

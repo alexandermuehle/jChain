@@ -13,7 +13,8 @@ import org.apache.log4j.Logger;
 import de.hpi.bclab.jchain.net.peering.Peer;
 
 /**
- * PeerDiscovery is responsible for listening to the {@link MulticastAnnouncement} Multicast group and handing received packets to a new {@link AnnouncementHandler} Thread 
+ * MulticastDiscovery is responsible for listening to the {@link MulticastAnnouncement} Multicast group and handing received packets to a new {@link AnnouncementHandler} Thread 
+ * 
  * @author Alexander Mühle
  *
  */

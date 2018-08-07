@@ -18,7 +18,6 @@ import de.hpi.bclab.jchain.net.peering.PeerManager;
 
 /**
  * Vulnerable to eclipse attacks through connection monopolisation because there are only incoming announcments
- * 		TODO: 
  * Vulnerable to DoS because we handle unsolicited announcments
  *  	TODO: ping pong with hash of ping to only receive answers to own announcment
  *  

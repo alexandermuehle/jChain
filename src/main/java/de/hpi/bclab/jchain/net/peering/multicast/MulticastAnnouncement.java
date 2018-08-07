@@ -7,6 +7,12 @@ import java.net.MulticastSocket;
 
 import org.apache.log4j.Logger;
 
+/**
+ * MulticastAnnouncement is responsible for announcing this peer to the Multicast group 
+ * 
+ * @author Alexander Mühle
+ *
+ */
 public class MulticastAnnouncement implements Runnable{
 	
 	private static final Logger log = Logger.getLogger(MulticastAnnouncement.class.getName());
@@ -23,7 +29,7 @@ public class MulticastAnnouncement implements Runnable{
 
 	@Override
 	public void run() {
-		byte[] msg = new byte[100]; //TODO: actual announcement
+		byte[] msg = new byte[100]; //TODO: actual announcement with PubKey
 		try {
 			if(Thread.interrupted()) return; //graceful shutdown
 			DatagramPacket packet = new DatagramPacket(msg, msg.length, group, port);

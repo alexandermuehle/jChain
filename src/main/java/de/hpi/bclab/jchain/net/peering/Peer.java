@@ -22,8 +22,12 @@ public class Peer {
 	private int distance;
 	
 	public Peer(int port, InetAddress adr) {
+		
 		this.port = port;
 		this.adr = adr;
+		
+		//Check reachability and distance
+		//TODO: use landmark- or simulation-based Network Coordinates to determine topology
 		long finish = 0;
 		long start = System.currentTimeMillis();
 		try {

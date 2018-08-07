@@ -1,5 +1,9 @@
 package de.hpi.bclab.jchain.statemachine.accountmodel;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import de.hpi.bclab.jchain.statemachine.Transaction;
 
 public class AccountTransaction extends Transaction{
@@ -30,5 +34,19 @@ public class AccountTransaction extends Transaction{
 	public String toString() {
 		return "Transaction to: " + receiver + " with value: " + value;
 	}
+
+	@Override
+	public void readExternal(ObjectInput arg0) throws IOException, ClassNotFoundException {
+		int msgType = arg0.read();
+		int stateModel = arg0.read();
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput arg0) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 
 }
