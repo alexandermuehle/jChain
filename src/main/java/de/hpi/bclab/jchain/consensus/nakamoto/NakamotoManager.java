@@ -10,28 +10,35 @@ import de.hpi.bclab.jchain.messages.ConsensusMessage;
 import de.hpi.bclab.jchain.statemachine.State;
 import de.hpi.bclab.jchain.statemachine.Transaction;
 
-public class NakamotoManager extends ConsensusManager {
+public class NakamotoManager implements ConsensusManager {
 	
 	private static final Logger log = Logger.getLogger(NakamotoManager.class.getName());
 
-	public NakamotoManager(Configuration config, State state, LinkedBlockingQueue<Transaction> txPool,
-			LinkedBlockingQueue<ConsensusMessage> cnsPool) {
-		super(config, state, txPool, cnsPool);
+	private Configuration config;
+	private State state;
+	private LinkedBlockingQueue<Transaction> txPool;
+	private LinkedBlockingQueue<ConsensusMessage> cnsPool;
+	
+	public NakamotoManager(Configuration config, State state, LinkedBlockingQueue<Transaction> txPool, LinkedBlockingQueue<ConsensusMessage> cnsPool) {
+		this.config = config;
+		this.state = state;
+		this.txPool = txPool;
+		this.cnsPool = cnsPool;
 	}
 	
-	public void start() {
+	@Override
+	public void run() {
 		log.info("Starting Nakamoto ConsensusManager");
 		while(!Thread.currentThread().isInterrupted()) {
 			try {
-				Transaction tx = super.getTxPool().take();
+				Transaction tx = txPool.take();
 				log.debug("Processing " + tx);
 				//TODO: get work, consensus etc
-				super.getState().applyTransaction(tx);
+				state.applyTransaction(tx);
 			} catch (InterruptedException e) {
 				log.info("Shutting down Nakamoto Consensus Manager");
 			}
 		}
-
 	}
 
 }

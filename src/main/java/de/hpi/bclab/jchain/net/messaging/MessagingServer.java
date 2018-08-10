@@ -46,7 +46,7 @@ public class MessagingServer implements Runnable {
 				log.error("Failed to listen to Messaging request");
 			}
 			try{
-		        ObjectInputStream in = new ObjectInputStream(client.getInputStream());	
+		        ObjectInputStream in = new ObjectInputStream(client.getInputStream());
 				Transaction tx = (Transaction) in.readObject();
 				log.info("Received tx: " + tx + "from " + client.getInetAddress());
 				txPool.put(tx);

@@ -26,21 +26,28 @@ import de.hpi.bclab.jchain.net.peering.PeerManager;
  * @author Alexander Mühle
  *
  */
-public class MulticastPeerManager extends PeerManager{
+public class MulticastPeerManager implements PeerManager{
 	
 	private static final Logger log = Logger.getLogger(MulticastPeerManager.class.getName());
 	
 	/**
-	 * The delay before the first announcement is sent to the network. {@value #INITIAL_DELAY}
+	 * The delay before the first announcement is sent to the network.
 	 */
 	private static final int INITIAL_DELAY = 0;
 	/**
-	 * The delay between announcements. {@value #REPEAT_DELAY}
+	 * The delay between announcements. 
 	 */
 	private static final int REPEAT_DELAY = 30;
+	
+	/**
+	 * Maximum number of neighbours allowed in this mode 
+	 */
+	private static final int MAX_NEIGHBOURS = 7;
 
 	private InetAddress group; //https://www.iana.org/assignments/multicast-addresses/multicast-addresses.xhtml#multicast-addresses-2
 	private int port; //https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml?&page=106
+	
+	private List<Peer> peers;
 	
 	/**
 	 * 
@@ -49,7 +56,7 @@ public class MulticastPeerManager extends PeerManager{
 	 * @throws UnknownHostException 
 	 */
 	public MulticastPeerManager(Configuration config, List<Peer> peers) {
-		super(config, peers);
+		this.peers = peers;
 		this.port = config.getInt("port");
 		try {
 			this.group = InetAddress.getByName(config.getString("group"));
@@ -57,9 +64,9 @@ public class MulticastPeerManager extends PeerManager{
 			log.error("Failed to recognise multicast group");
 		}
 	}
-	
-	
-	public void start() {
+
+	@Override
+	public void run() {
 		log.info("Starting Multicast PeerManager");
 		MulticastSocket socket = null;
 		try {
@@ -76,7 +83,7 @@ public class MulticastPeerManager extends PeerManager{
 
 		//Start multicast peer discovery thread
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		executor.execute(new MulticastDiscovery(port, group, super.getPeers(), socket));
+		executor.execute(new MulticastDiscovery(port, group, peers, socket));
 		
 		while(!Thread.currentThread().isInterrupted()) {
 			try {
@@ -94,8 +101,18 @@ public class MulticastPeerManager extends PeerManager{
 		} catch (InterruptedException ex) {
 			log.error("Failed to shutdown Multicast Announcment and Discovery");
 		}
+	}
 
-		
+
+	@Override
+	public List<Peer> getPeers() {
+		return peers;
+	}
+
+
+	@Override
+	public List<Peer> getNeighbours() {
+		return peers.subList(0, MAX_NEIGHBOURS);
 	}
 	
 	

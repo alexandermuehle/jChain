@@ -5,7 +5,7 @@ import java.util.HashMap;
 import de.hpi.bclab.jchain.statemachine.State;
 import de.hpi.bclab.jchain.statemachine.Transaction;
 
-public class AccountState extends State{
+public class AccountState implements State{
 	
 	private HashMap<Account, Long> state;
 	

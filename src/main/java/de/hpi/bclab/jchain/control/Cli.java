@@ -32,6 +32,7 @@ public class Cli {
 		options.addOption("p", "port", true, "set port");
 		options.addOption("rp", "rpcport", true, "set rpcport");
 		options.addOption("rpc", "rpcport", false, "set rpc enabled");
+		options.addOption("bs", "bootstrap", true, "set bootstrap node address");
 		options.addOption("g", "group", true, "set multicast group");
 		options.addOption("cns", "consensusmode", true, "set consensus mode");
 		options.addOption("pm", "peermode", true, "set peermode");
@@ -80,6 +81,10 @@ public class Cli {
 				config.addProperty("rpcport", 7498);
 			}
 			
+			if(cmd.hasOption("bs")) {
+				config.addProperty("bootstrap", cmd.getOptionValue("bs"));
+			}
+			
 			if(cmd.hasOption("g")) {
 				config.addProperty("group", cmd.getOptionValue("g"));
 			}
@@ -88,10 +93,10 @@ public class Cli {
 			}
 			
 			if(cmd.hasOption("cns")) {
-				config.addProperty("consensusmode", cmd.getOptionValue("cns"));
+				config.addProperty("consensus", cmd.getOptionValue("cns"));
 			}
 			else {
-				config.addProperty("consensusmode", "nakamoto");
+				config.addProperty("consensus", "nakamoto");
 			}
 			
 			if(cmd.hasOption("pm")) {

@@ -1,6 +1,6 @@
 package de.hpi.bclab.jchain.statemachine;
 
-public abstract class State {
+public interface State {
 	
 	abstract public void applyTransaction(Transaction tx);
 	

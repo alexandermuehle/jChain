@@ -7,13 +7,12 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.configuration2.Configuration;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.hpi.bclab.jchain.consensus.ConsensusManager;
+import de.hpi.bclab.jchain.consensus.nakamoto.NakamotoManager;
 import de.hpi.bclab.jchain.control.Cli;
 import de.hpi.bclab.jchain.control.CommandManager;
 import de.hpi.bclab.jchain.messages.Command;
@@ -21,6 +20,8 @@ import de.hpi.bclab.jchain.messages.ConsensusMessage;
 import de.hpi.bclab.jchain.net.messaging.MessagingManager;
 import de.hpi.bclab.jchain.net.peering.Peer;
 import de.hpi.bclab.jchain.net.peering.PeerManager;
+import de.hpi.bclab.jchain.net.peering.multicast.MulticastPeerManager;
+import de.hpi.bclab.jchain.net.peering.unstructured.UnstructuredPeerManager;
 import de.hpi.bclab.jchain.statemachine.State;
 import de.hpi.bclab.jchain.statemachine.Transaction;
 import de.hpi.bclab.jchain.statemachine.accountmodel.AccountState;
@@ -61,28 +62,37 @@ public class App
 		ExecutorService executor = Executors.newCachedThreadPool();
     	
     	//PEERING
-    	executor.execute(new PeerManager(config, peers));
+		PeerManager peering;
+		switch (config.getString("peermode")) {
+		case "multicast":
+	    	peering = new MulticastPeerManager(config, peers);
+			break;
+		case "unstructured":
+	    	peering = new UnstructuredPeerManager(config, peers);
+	    	break;
+		default:
+			peering = new UnstructuredPeerManager(config, peers);
+			break;
+		}
+		executor.execute(peering);
         
         //MESSAGING
     	executor.execute(new MessagingManager(config, peers, txPool, cnsPool, cmdPool));
         
         //CONSENSUS
-        executor.execute(new ConsensusManager(config, state, txPool, cnsPool));
+    	ConsensusManager consensus;
+    	switch (config.getString("consensus")) {
+		case "nakamoto":
+			consensus = new NakamotoManager(config, state, txPool, cnsPool);
+			break;
+		default:
+			consensus = new NakamotoManager(config, state, txPool, cnsPool);
+			break;
+		}
+        executor.execute(consensus);
         
         //CLI/RPC CONTROL
         executor.execute(new CommandManager(config, state, cmdPool, peers));
-        
-//        Runtime.getRuntime().addShutdownHook(new Thread() {
-//        	public void run() {
-//        		log.info("Shutting down...");
-//        		executor.shutdownNow();
-//        		try {
-//					System.out.println(executor.awaitTermination(1, TimeUnit.MINUTES));
-//				} catch (InterruptedException e) {
-//					log.error("Couldn't wait for termination of all threads");
-//				}
-//        	}
-//        });
         
     }
 }

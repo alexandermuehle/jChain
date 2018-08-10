@@ -45,7 +45,6 @@ public class MessagingManager implements Runnable {
 		//SERVER THREAD
 		executor.execute(new MessagingServer(txPool, cnsPool, 7499));
 		
-		
 		//CMD 
 		Command cmd;
 		try {
