@@ -23,15 +23,17 @@ public class MessagingManager implements Runnable {
 	private Configuration config;
 	private List<Peer> peers;
 	private LinkedBlockingQueue<Transaction> txPool;
-	private LinkedBlockingQueue<ConsensusMessage> cnsPool;
+	private LinkedBlockingQueue<ConsensusMessage> cnsIn;
+	private LinkedBlockingQueue<ConsensusMessage> cnsOut;
 	private LinkedBlockingQueue<Command> cmdPool;
 
 	public MessagingManager(Configuration config, List<Peer> peers, LinkedBlockingQueue<Transaction> txPool,
-			LinkedBlockingQueue<ConsensusMessage> cnsPool, LinkedBlockingQueue<Command> cmdPool) {
+			LinkedBlockingQueue<ConsensusMessage> cnsIn, LinkedBlockingQueue<ConsensusMessage> cnsOut, LinkedBlockingQueue<Command> cmdPool) {
 		this.config = config;
 		this.peers = peers;
 		this.txPool = txPool;
-		this.cnsPool = cnsPool;
+		this.cnsIn = cnsIn;
+		this.cnsOut = cnsOut;
 		this.cmdPool = cmdPool;
 	}
 
@@ -43,7 +45,7 @@ public class MessagingManager implements Runnable {
 		ExecutorService executor = Executors.newSingleThreadExecutor();
 
 		//SERVER THREAD
-		executor.execute(new MessagingServer(txPool, cnsPool, 7499));
+		executor.execute(new MessagingServer(txPool, cnsIn, 7499));
 		
 		//CMD 
 		Command cmd;
@@ -65,7 +67,7 @@ public class MessagingManager implements Runnable {
 		Socket clientSocket = null;
 		try {
 			for (Peer peer : peers) {
-				log.info("Sending " + tx + " to" + peer);
+				log.info("Sending " + tx + " to " + peer);
 				clientSocket = new Socket(peer.getAdr(), peer.getPort());
 				ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
 				out.writeObject(tx); //TODO serialise correctly

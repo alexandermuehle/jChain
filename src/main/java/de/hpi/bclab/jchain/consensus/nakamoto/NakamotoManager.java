@@ -17,13 +17,15 @@ public class NakamotoManager implements ConsensusManager {
 	private Configuration config;
 	private State state;
 	private LinkedBlockingQueue<Transaction> txPool;
-	private LinkedBlockingQueue<ConsensusMessage> cnsPool;
-	
-	public NakamotoManager(Configuration config, State state, LinkedBlockingQueue<Transaction> txPool, LinkedBlockingQueue<ConsensusMessage> cnsPool) {
+	private LinkedBlockingQueue<ConsensusMessage> cnsIn;	
+	private LinkedBlockingQueue<ConsensusMessage> cnsOut;
+
+	public NakamotoManager(Configuration config, State state, LinkedBlockingQueue<Transaction> txPool, LinkedBlockingQueue<ConsensusMessage> cnsPool, LinkedBlockingQueue<ConsensusMessage> cnsOut) {
 		this.config = config;
 		this.state = state;
 		this.txPool = txPool;
-		this.cnsPool = cnsPool;
+		this.cnsIn = cnsIn;
+		this.cnsOut = cnsOut;
 	}
 	
 	@Override

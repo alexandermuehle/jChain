@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+option java_outer_classname = "AccountTransactionProtos";
+
+message Transaction{
+	required int32 receiver = 1;
+	required int64 value = 2;
+}

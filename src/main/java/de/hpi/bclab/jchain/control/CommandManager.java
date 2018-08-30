@@ -60,7 +60,6 @@ public class CommandManager implements Runnable{
 		ServerSocket socket = null;
 		try {
 			socket = new ServerSocket(rpcPort);
-			socket.setSoTimeout(30000);
 		} catch (IOException e1) {
 			log.error("Failed to open RPC Server Socket");
 			return;
@@ -92,7 +91,7 @@ public class CommandManager implements Runnable{
 		        String answer = ""; 
 		        if (payload.toString().contains("acc_")) answer = rpcServer.handle(payload.toString(), accountService);
 		        else if (payload.toString().contains("net_")) answer = rpcServer.handle(payload.toString(), networkService);
-		        else {
+		        else {	
 		        	answer = rpcServer.handle(payload.toString(), accountService);
 		        }
 
@@ -109,9 +108,11 @@ public class CommandManager implements Runnable{
 				out.close();
 				client.close();
 			} catch (SocketTimeoutException e) {
-				
+				log.error("Failed to receive RPC request");
+				log.debug(e);
 			} catch (IOException e) {
 				log.error("Failed to accept RPC request");
+				log.debug(e);
 			} 
 		}		
 		try {

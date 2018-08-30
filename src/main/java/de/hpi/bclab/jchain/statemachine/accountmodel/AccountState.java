@@ -23,7 +23,7 @@ public class AccountState implements State{
 	}
 	
 	public boolean verifyTransaction(Transaction tx) {
-		return false;
+		return true;
 		// TODO Auto-generated method stub
 	}
 

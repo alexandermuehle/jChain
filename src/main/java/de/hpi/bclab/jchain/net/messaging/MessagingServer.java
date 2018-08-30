@@ -33,7 +33,6 @@ public class MessagingServer implements Runnable {
 		
 		try {
 			socket = new ServerSocket(msgPort);
-			socket.setSoTimeout(30000);
 		} catch (IOException e1) {
 			log.error("Failed to open Messaging Server Socket");
 			return;
@@ -42,21 +41,24 @@ public class MessagingServer implements Runnable {
 		while(!Thread.currentThread().isInterrupted()) {
 			try {
 				client = socket.accept();
+				try{
+			        ObjectInputStream in = new ObjectInputStream(client.getInputStream());
+					Transaction tx = (Transaction) in.readObject();
+					log.info("Received tx: " + tx + "from " + client.getInetAddress());
+					txPool.put(tx);
+				} catch (ClassNotFoundException e) {
+					log.error("Expected Transaction but got " + e);
+				} catch (InterruptedException e) {
+					log.error("Failed to put new Transaction in txPool");
+				} catch (IOException e) {
+					log.error("Failed to accept Messaging request");
+					log.debug(e);
+				}
 			} catch (IOException e) {
 				log.error("Failed to listen to Messaging request");
+				log.debug(e);
 			}
-			try{
-		        ObjectInputStream in = new ObjectInputStream(client.getInputStream());
-				Transaction tx = (Transaction) in.readObject();
-				log.info("Received tx: " + tx + "from " + client.getInetAddress());
-				txPool.put(tx);
-			} catch (ClassNotFoundException e) {
-				log.error("Expected Transaction but got " + e);
-			} catch (InterruptedException e) {
-				log.error("Failed to put new Transaction in txPool");
-			} catch (IOException e) {
-				log.error("Failed to accept Messaging request");
-			}			
+		
 		}
 		
 		try {

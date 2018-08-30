@@ -55,7 +55,8 @@ public class App
         //SHARED RESOURCES for PRODUCER / CONSUMER DESIGN PATTERN
         List<Peer> peers = Collections.synchronizedList(new ArrayList<Peer>());
     	LinkedBlockingQueue<Transaction> txPool = new LinkedBlockingQueue<Transaction>();
-    	LinkedBlockingQueue<ConsensusMessage> cnsPool = new LinkedBlockingQueue<ConsensusMessage>();
+    	LinkedBlockingQueue<ConsensusMessage> cnsIn = new LinkedBlockingQueue<ConsensusMessage>();
+    	LinkedBlockingQueue<ConsensusMessage> cnsOut = new LinkedBlockingQueue<ConsensusMessage>();
     	LinkedBlockingQueue<Command> cmdPool = new LinkedBlockingQueue<Command>();
         
     	//THREAD POOL
@@ -77,16 +78,16 @@ public class App
 		executor.execute(peering);
         
         //MESSAGING
-    	executor.execute(new MessagingManager(config, peers, txPool, cnsPool, cmdPool));
+    	executor.execute(new MessagingManager(config, peers, txPool, cnsIn, cnsOut, cmdPool));
         
         //CONSENSUS
     	ConsensusManager consensus;
     	switch (config.getString("consensus")) {
 		case "nakamoto":
-			consensus = new NakamotoManager(config, state, txPool, cnsPool);
+			consensus = new NakamotoManager(config, state, txPool, cnsIn, cnsOut);
 			break;
 		default:
-			consensus = new NakamotoManager(config, state, txPool, cnsPool);
+			consensus = new NakamotoManager(config, state, txPool, cnsIn, cnsOut);
 			break;
 		}
         executor.execute(consensus);
