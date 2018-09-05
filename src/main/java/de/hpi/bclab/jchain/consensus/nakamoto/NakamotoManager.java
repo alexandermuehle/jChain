@@ -20,7 +20,7 @@ public class NakamotoManager implements ConsensusManager {
 	private LinkedBlockingQueue<ConsensusMessage> cnsIn;	
 	private LinkedBlockingQueue<ConsensusMessage> cnsOut;
 
-	public NakamotoManager(Configuration config, State state, LinkedBlockingQueue<Transaction> txPool, LinkedBlockingQueue<ConsensusMessage> cnsPool, LinkedBlockingQueue<ConsensusMessage> cnsOut) {
+	public NakamotoManager(Configuration config, State state, LinkedBlockingQueue<Transaction> txPool, LinkedBlockingQueue<ConsensusMessage> cnsIn, LinkedBlockingQueue<ConsensusMessage> cnsOut) {
 		this.config = config;
 		this.state = state;
 		this.txPool = txPool;
@@ -36,6 +36,12 @@ public class NakamotoManager implements ConsensusManager {
 				Transaction tx = txPool.take();
 				log.debug("Processing " + tx);
 				//TODO: get work, consensus etc
+				// make block
+				// while(config.blocksize > txlist)
+				// 		txPool.take();
+				// Block newBlock = new Block(txList, state.latestBlock(), nonce)
+				// while(state.difficulty > hash(newBlock)
+				//		find nonce
 				state.applyTransaction(tx);
 			} catch (InterruptedException e) {
 				log.info("Shutting down Nakamoto Consensus Manager");
