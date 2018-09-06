@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class HashUtil {
 	
-	public static String sha3Hash(byte[] in) {
+	public static String shaHash(byte[] in) {
 		MessageDigest digest;
 		try {
 			digest = MessageDigest.getInstance("SHA-256");

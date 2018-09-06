@@ -42,12 +42,16 @@ public class Block {
 			log.error("Failed to hash Block");
 			log.debug(e);
 		}
-		this.hash = HashUtil.sha3Hash(outputStream.toByteArray());
+		this.hash = HashUtil.shaHash(outputStream.toByteArray());
 		return this.hash;
 	}
 	
 	public String getHash() {
 		return this.hash;
+	}
+	
+	public String getPrevHash() {
+		return this.prevHash;
 	}
 	
 	public boolean mineBlock(int difficulty) {

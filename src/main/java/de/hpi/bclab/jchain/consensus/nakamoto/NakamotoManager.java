@@ -1,7 +1,6 @@
 package de.hpi.bclab.jchain.consensus.nakamoto;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.commons.configuration2.Configuration;
@@ -18,7 +17,7 @@ public class NakamotoManager implements ConsensusManager {
 
 	private Configuration config;
 	private State state;
-	private ArrayList<Block> blockchain;
+	private Blockchain blockchain;
 	private LinkedBlockingQueue<Transaction> txPool;
 	private LinkedBlockingQueue<ConsensusMessage> cnsIn;	
 	private LinkedBlockingQueue<ConsensusMessage> cnsOut;
@@ -29,9 +28,7 @@ public class NakamotoManager implements ConsensusManager {
 		this.txPool = txPool;
 		this.cnsIn = cnsIn;
 		this.cnsOut = cnsOut;
-		//GENESIS
-		this.blockchain = new ArrayList<Block>();
-		blockchain.add(new Block("0", new ArrayList<Transaction>()));
+		this.blockchain = new Blockchain();
 	}
 	
 	@Override
@@ -40,17 +37,26 @@ public class NakamotoManager implements ConsensusManager {
 		while(!Thread.currentThread().isInterrupted()) {
 			try {
 				ArrayList<Transaction> txList = new ArrayList<>();
-				//TODO: get work, consensus etc
+
+				//fill txlist until the block is full
 				while(config.getInt("blocksize") > txList.size()) {
 					txList.add(txPool.take());
 				}
-				Block newBlock = new Block(blockchain.get(blockchain.size()-1).getHash(), txList);
+				//create new block and find nonce to fit difficulty
+				Block newBlock = new Block(blockchain.getHead().getHash(), txList);
 				newBlock.mineBlock(2); //TODO calculate difficulty from blockchain
 				log.info("Found new Block: " + newBlock.getHash());
-				blockchain.add(newBlock);
+				
+				//add it to the blockchain
+				blockchain.addBlock(newBlock);
+				
+				//TODO: broadcast block
+				
+				//apply to state
 				for(Transaction tx : txList) {
 					state.applyTransaction(tx);	
 				}
+				
 			} catch (InterruptedException e) {
 				log.info("Shutting down Nakamoto Consensus Manager");
 			}
