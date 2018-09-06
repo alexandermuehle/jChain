@@ -35,6 +35,7 @@ public class Cli {
 		options.addOption("bs", "bootstrap", true, "set bootstrap node address");
 		options.addOption("g", "group", true, "set multicast group");
 		options.addOption("cns", "consensusmode", true, "set consensus mode");
+		options.addOption("blks", "blocksize", true, "set the blocksize");
 		options.addOption("pm", "peermode", true, "set peermode");
 		options.addOption("sm", "statemodel", true, "set statemodel");
 		options.addOption("d", "data", true, "set database location");
@@ -97,6 +98,13 @@ public class Cli {
 			}
 			else {
 				config.addProperty("consensus", "nakamoto");
+			}
+			
+			if(cmd.hasOption("blks")) {
+				config.addProperty("blocksize", cmd.getOptionValue("blks"));
+			}
+			else {
+				config.addProperty("blocksize", 5);
 			}
 			
 			if(cmd.hasOption("pm")) {
