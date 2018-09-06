@@ -37,7 +37,7 @@ public class Block {
 			dos.writeUTF(prevHash);
 			dos.writeLong(timestamp);
 			outputStream.write(nonce);
-			
+			//TODO: merkle root of txs
 		} catch (IOException e) {
 			log.error("Failed to hash Block");
 			log.debug(e);
@@ -52,7 +52,8 @@ public class Block {
 	
 	public boolean mineBlock(int difficulty) {
 		while(!this.getHash().substring(0, difficulty).matches("0*")) {
-			this.nonce++; 
+			this.nonce++;
+			calculateHash();
 		}
 		return true;
 	}

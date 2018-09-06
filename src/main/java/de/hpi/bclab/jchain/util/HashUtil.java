@@ -8,7 +8,7 @@ public class HashUtil {
 	public static String sha3Hash(byte[] in) {
 		MessageDigest digest;
 		try {
-			digest = MessageDigest.getInstance("SHA3-256");
+			digest = MessageDigest.getInstance("SHA-256");
 			byte[] hash = digest.digest(in); 
 			
 			StringBuffer hexString = new StringBuffer();

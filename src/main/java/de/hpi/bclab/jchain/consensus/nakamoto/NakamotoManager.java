@@ -29,6 +29,9 @@ public class NakamotoManager implements ConsensusManager {
 		this.txPool = txPool;
 		this.cnsIn = cnsIn;
 		this.cnsOut = cnsOut;
+		//GENESIS
+		this.blockchain = new ArrayList<Block>();
+		blockchain.add(new Block("0", new ArrayList<Transaction>()));
 	}
 	
 	@Override
@@ -38,11 +41,13 @@ public class NakamotoManager implements ConsensusManager {
 			try {
 				ArrayList<Transaction> txList = new ArrayList<>();
 				//TODO: get work, consensus etc
-				while(config.getInt("blks") > txList.size()) {
+				while(config.getInt("blocksize") > txList.size()) {
 					txList.add(txPool.take());
 				}
 				Block newBlock = new Block(blockchain.get(blockchain.size()-1).getHash(), txList);
 				newBlock.mineBlock(2); //TODO calculate difficulty from blockchain
+				log.info("Found new Block: " + newBlock.getHash());
+				blockchain.add(newBlock);
 				for(Transaction tx : txList) {
 					state.applyTransaction(tx);	
 				}
