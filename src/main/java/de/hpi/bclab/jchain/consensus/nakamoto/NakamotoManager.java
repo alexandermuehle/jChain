@@ -39,7 +39,7 @@ public class NakamotoManager implements ConsensusManager {
 				ArrayList<Transaction> txList = new ArrayList<>();
 
 				//fill txlist until the block is full
-				while(config.getInt("blocksize") > txList.size()) {
+				while(config.getInt("blocksize") > txList.size() && !txPool.isEmpty()) {
 					txList.add(txPool.take());
 				}
 				//create new block and find nonce to fit difficulty
