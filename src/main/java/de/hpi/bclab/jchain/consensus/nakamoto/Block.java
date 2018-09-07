@@ -16,13 +16,13 @@ public class Block {
 	
 	private String prevHash;
 	private long timestamp;
-	private int difficulty;
+	private String difficulty;
 	private int nonce;
 	private ArrayList<Transaction> txs;
 	
 	private String hash;
 	
-	public Block(String prevHash, int difficulty, ArrayList<Transaction> txs) {
+	public Block(String prevHash, String difficulty, ArrayList<Transaction> txs) {
 		this.prevHash = prevHash;
 		this.difficulty = difficulty;
 		this.timestamp = new Date().getTime();
@@ -54,7 +54,7 @@ public class Block {
 		return this.timestamp;
 	}
 	
-	public int getDifficulty() {
+	public String getDifficulty() {
 		return this.difficulty;
 	}
 	
@@ -63,7 +63,7 @@ public class Block {
 	}
 	
 	public boolean mineBlock() {
-		while(!hash.substring(0, difficulty).matches("0*")) {
+		while(hash.compareTo(difficulty) > 0) {
 			nonce++;
 			calculateHash();
 		}
