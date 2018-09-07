@@ -5,8 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Random;
-
 import org.apache.log4j.Logger;
 
 import de.hpi.bclab.jchain.statemachine.Transaction;
@@ -18,13 +16,15 @@ public class Block {
 	
 	private String prevHash;
 	private long timestamp;
+	private int difficulty;
 	private int nonce;
 	private ArrayList<Transaction> txs;
 	
 	private String hash;
 	
-	public Block(String prevHash, ArrayList<Transaction> txs) {
+	public Block(String prevHash, int difficulty, ArrayList<Transaction> txs) {
 		this.prevHash = prevHash;
+		this.difficulty = difficulty;
 		this.timestamp = new Date().getTime();
 		this.txs = txs;
 		this.hash = calculateHash();
@@ -36,7 +36,7 @@ public class Block {
 		try {
 			dos.writeUTF(prevHash);
 			dos.writeLong(timestamp);
-			outputStream.write(nonce);
+			dos.write(nonce);
 			//TODO: merkle root of txs
 		} catch (IOException e) {
 			log.error("Failed to hash Block");
@@ -50,13 +50,21 @@ public class Block {
 		return this.hash;
 	}
 	
+	public long getTimestamp() {
+		return this.timestamp;
+	}
+	
+	public int getDifficulty() {
+		return this.difficulty;
+	}
+	
 	public String getPrevHash() {
 		return this.prevHash;
 	}
 	
-	public boolean mineBlock(int difficulty) {
-		while(!this.getHash().substring(0, difficulty).matches("0*")) {
-			this.nonce++;
+	public boolean mineBlock() {
+		while(!hash.substring(0, difficulty).matches("0*")) {
+			nonce++;
 			calculateHash();
 		}
 		return true;

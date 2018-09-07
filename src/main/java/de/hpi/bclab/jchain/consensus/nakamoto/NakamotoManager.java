@@ -43,19 +43,20 @@ public class NakamotoManager implements ConsensusManager {
 					txList.add(txPool.take());
 				}
 				//create new block and find nonce to fit difficulty
-				Block newBlock = new Block(blockchain.getHead().getHash(), txList);
-				newBlock.mineBlock(2); //TODO calculate difficulty from blockchain
+				Block newBlock = new Block(blockchain.getHead().getHash(), blockchain.getDifficulty(), txList);
+				newBlock.mineBlock(); //TODO calculate difficulty from blockchain
 				log.info("Found new Block: " + newBlock.getHash());
 				
 				//add it to the blockchain
-				blockchain.addBlock(newBlock);
-				
+				if (blockchain.addBlock(newBlock)) {
+					//apply to state
+					for(Transaction tx : txList) {
+						state.applyTransaction(tx);	
+					}
+				}
 				//TODO: broadcast block
 				
-				//apply to state
-				for(Transaction tx : txList) {
-					state.applyTransaction(tx);	
-				}
+
 				
 			} catch (InterruptedException e) {
 				log.info("Shutting down Nakamoto Consensus Manager");
