@@ -38,15 +38,14 @@ public class NakamotoManager implements ConsensusManager {
 			try {
 				ArrayList<Transaction> txList = new ArrayList<>();
 
-				//fill txlist until the block is full
+				//fill txlist until the block is full or no tx are in the pool
 				while(config.getInt("blocksize") > txList.size() && !txPool.isEmpty()) {
 					txList.add(txPool.take());
 				}
 				//create new block and find nonce to fit difficulty
 				Block newBlock = new Block(blockchain.getHead().getHash(), blockchain.getDifficulty(), txList);
-				newBlock.mineBlock(); //TODO calculate difficulty from blockchain
+				newBlock.mineBlock(); 
 				log.info("Found new Block: " + newBlock.getHash());
-				
 				//add it to the blockchain
 				if (blockchain.addBlock(newBlock)) {
 					//apply to state
@@ -54,8 +53,9 @@ public class NakamotoManager implements ConsensusManager {
 						state.applyTransaction(tx);	
 					}
 				}
-				//TODO: broadcast block
 				
+				//broadcast block
+				cnsOut.put(new ConsensusMessage(newBlock));
 
 				
 			} catch (InterruptedException e) {

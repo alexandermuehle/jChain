@@ -13,8 +13,8 @@ public class Blockchain {
 	
 	private static final Logger log = Logger.getLogger(Blockchain.class.getName());
 	
-	private static final int DIFFICULTY_WINDOW = 2000;
-	private static final int BLOCKTIME = 15000;
+	private static final int DIFFICULTY_WINDOW = 5;
+	private static final int BLOCKTIME = 10000;
 	
 	private String difficulty;
 	private Node<Block> root;
@@ -24,7 +24,7 @@ public class Blockchain {
 	 * The Blockchain holds a tree structure of all received Blocks
 	 */
 	public Blockchain () {
-		difficulty = "07f39d8f5cd7a11e914eb19410540d1e59647eb08f391ef615ced7be08971a05";
+		difficulty = "05f39d8f5cd7a11e914eb19410540d1e59647eb08f391ef615ced7be08971a05";
 		root = new Node<Block>();
 		root.block = new Block("0", difficulty, new ArrayList<Transaction>());
 		root.depth = 0;
@@ -42,14 +42,15 @@ public class Blockchain {
 			}
 		}
 		long timeDif = head.block.getTimestamp() - runner.block.getTimestamp();
-		//calculate multiplier for current difficulty
+		//calculate divisor for current difficulty
 		double multiDiff = (DIFFICULTY_WINDOW * BLOCKTIME) / (double) timeDif; 
+		if(multiDiff > 1) multiDiff = Math.log(multiDiff);
 		log.info("Calculated difficulty difference " + multiDiff);
-		//new difficulty (log of difficulty multiplier
+		//new difficulty BigDecimal for accuracy
 		BigInteger bigDiff = new BigInteger(difficulty, 16);
-		double newDiff = bigDiff.doubleValue() / Math.log(multiDiff);
+		BigDecimal newDiff = new BigDecimal(bigDiff).divide(new BigDecimal(multiDiff), 0, BigDecimal.ROUND_DOWN);
 		//get hex string from calculated new difficulty and pad it with 0s in front to have same length
-		String strDiff = BigDecimal.valueOf(newDiff).toBigInteger().toString(16);
+		String strDiff = newDiff.toBigInteger().toString(16);
 		while(difficulty.length() > strDiff.length()) {
 			strDiff = "0" + strDiff;
 		}

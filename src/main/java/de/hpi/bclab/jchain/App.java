@@ -60,7 +60,7 @@ public class App
     	LinkedBlockingQueue<Command> cmdPool = new LinkedBlockingQueue<Command>();
         
     	//THREAD POOL
-		ExecutorService executor = Executors.newCachedThreadPool();
+		ExecutorService executor = Executors.newFixedThreadPool(4);
     	
     	//PEERING
 		PeerManager peering;
@@ -94,6 +94,8 @@ public class App
         
         //CLI/RPC CONTROL
         executor.execute(new CommandManager(config, state, cmdPool, peers));
+        
+        executor.shutdown();
         
     }
 }
