@@ -13,8 +13,9 @@ public class Blockchain {
 	
 	private static final Logger log = Logger.getLogger(Blockchain.class.getName());
 	
-	private static final int DIFFICULTY_WINDOW = 1000;
-	private static final int BLOCKTIME = 1500;
+	private static final int DIFFICULTY_WINDOW = 2000;
+	private static final int BLOCKTIME = 15000;
+	
 	private String difficulty;
 	private Node<Block> root;
 	private Node<Block> head;
@@ -44,9 +45,9 @@ public class Blockchain {
 		//calculate multiplier for current difficulty
 		double multiDiff = (DIFFICULTY_WINDOW * BLOCKTIME) / (double) timeDif; 
 		log.info("Calculated difficulty difference " + multiDiff);
-		//new difficulty
+		//new difficulty (log of difficulty multiplier
 		BigInteger bigDiff = new BigInteger(difficulty, 16);
-		double newDiff = bigDiff.doubleValue() / multiDiff;
+		double newDiff = bigDiff.doubleValue() / Math.log(multiDiff);
 		//get hex string from calculated new difficulty and pad it with 0s in front to have same length
 		String strDiff = BigDecimal.valueOf(newDiff).toBigInteger().toString(16);
 		while(difficulty.length() > strDiff.length()) {
