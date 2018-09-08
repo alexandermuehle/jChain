@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import de.hpi.bclab.jchain.statemachine.Transaction;
+import de.hpi.bclab.jchain.util.HashUtil;
 
 public class Blockchain {
 	
@@ -27,6 +28,7 @@ public class Blockchain {
 		difficulty = "05f39d8f5cd7a11e914eb19410540d1e59647eb08f391ef615ced7be08971a05";
 		root = new Node<Block>();
 		root.block = new Block("0", difficulty, new ArrayList<Transaction>());
+		root.block.setHash(HashUtil.blockHash("0", root.block.getNonce(), root.block.getTimestamp(), root.block.getTransactions()));
 		root.depth = 0;
 		root.children = new ArrayList<Node<Block>>();
 		head = root;

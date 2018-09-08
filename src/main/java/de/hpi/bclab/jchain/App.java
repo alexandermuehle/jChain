@@ -60,7 +60,7 @@ public class App
     	LinkedBlockingQueue<ConsensusMessage> cnsOut = new LinkedBlockingQueue<ConsensusMessage>();
         
     	//THREAD POOL
-		ExecutorService executor = Executors.newFixedThreadPool(4);
+		ExecutorService executor = Executors.newFixedThreadPool(5);
     	
     	//PEERING
 		PeerManager peering;
