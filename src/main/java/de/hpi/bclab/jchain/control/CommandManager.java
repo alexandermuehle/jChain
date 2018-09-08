@@ -19,9 +19,9 @@ import com.github.arteam.simplejsonrpc.server.JsonRpcServer;
 
 import de.hpi.bclab.jchain.control.rpcservices.AccountService;
 import de.hpi.bclab.jchain.control.rpcservices.NetworkService;
-import de.hpi.bclab.jchain.messages.Command;
 import de.hpi.bclab.jchain.net.peering.Peer;
 import de.hpi.bclab.jchain.statemachine.State;
+import de.hpi.bclab.jchain.statemachine.Transaction;
 
 /**
  * The CommandManager is responsible for running the RPC Server and calling the appropriate {@link de.hpi.bclab.jchain.control.rpcservices}
@@ -35,13 +35,13 @@ public class CommandManager implements Runnable{
 	private static final Logger log = Logger.getLogger(CommandManager.class.getName());
 	
 	private State state;
-	private LinkedBlockingQueue<Command> cmdPool;
+	private LinkedBlockingQueue<Transaction> txOut;
 	private List<Peer> peers;
 	private boolean listening;
 	private int rpcPort;
 
-	public CommandManager(Configuration config, State state, LinkedBlockingQueue<Command> cmdPool, List<Peer> peers) {
-		this.cmdPool = cmdPool;
+	public CommandManager(Configuration config, State state, LinkedBlockingQueue<Transaction> txOut, List<Peer> peers) {
+		this.txOut = txOut;
 		this.peers = peers;
 		this.state = state;
 		this.listening = config.getBoolean("rpc");
@@ -52,7 +52,7 @@ public class CommandManager implements Runnable{
 	public void run() {
 		
 		log.info("Starting Command Manager");
-		AccountService accountService = new AccountService(cmdPool, state);
+		AccountService accountService = new AccountService(txOut, state);
 		NetworkService  networkService = new NetworkService(peers);
 		JsonRpcServer rpcServer = new JsonRpcServer();		
 		

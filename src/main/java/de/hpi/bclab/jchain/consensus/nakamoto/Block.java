@@ -76,6 +76,11 @@ public class Block {
 
 		while(hash.compareTo(difficulty) > 0) {
 			nonce++;
+			//reset timestamp and nonce if no block is found
+			if(nonce == Long.MAX_VALUE) {
+				timestamp = new Date().getTime();
+				nonce = 0;
+			}
 			calculateHash();
 		}
 		log.info("nonce found: " + nonce);

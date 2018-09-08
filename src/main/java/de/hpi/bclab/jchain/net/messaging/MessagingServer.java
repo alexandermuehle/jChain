@@ -1,9 +1,13 @@
 package de.hpi.bclab.jchain.net.messaging;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
@@ -38,24 +42,13 @@ public class MessagingServer implements Runnable {
 			return;
 		}
 		
+		ExecutorService executor = Executors.newCachedThreadPool();
 		while(!Thread.currentThread().isInterrupted()) {
 			try {
 				client = socket.accept();
-				try{
-			        ObjectInputStream in = new ObjectInputStream(client.getInputStream());
-					Transaction tx = (Transaction) in.readObject();
-					log.info("Received tx: " + tx + "from " + client.getInetAddress());
-					txPool.put(tx);
-				} catch (ClassNotFoundException e) {
-					log.error("Expected Transaction but got " + e);
-				} catch (InterruptedException e) {
-					log.error("Failed to put new Transaction in txPool");
-				} catch (IOException e) {
-					log.error("Failed to accept Messaging request");
-					log.debug(e);
-				}
+				executor.execute(new ServerHandler(client, txPool, cnsPool));
 			} catch (IOException e) {
-				log.error("Failed to listen to Messaging request");
+				log.error("Failed to accept Messaging request");
 				log.debug(e);
 			}
 		

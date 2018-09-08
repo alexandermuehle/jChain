@@ -15,9 +15,9 @@ import de.hpi.bclab.jchain.consensus.ConsensusManager;
 import de.hpi.bclab.jchain.consensus.nakamoto.NakamotoManager;
 import de.hpi.bclab.jchain.control.Cli;
 import de.hpi.bclab.jchain.control.CommandManager;
-import de.hpi.bclab.jchain.messages.Command;
 import de.hpi.bclab.jchain.messages.ConsensusMessage;
-import de.hpi.bclab.jchain.net.messaging.MessagingManager;
+import de.hpi.bclab.jchain.net.messaging.MessagingClient;
+import de.hpi.bclab.jchain.net.messaging.MessagingServer;
 import de.hpi.bclab.jchain.net.peering.Peer;
 import de.hpi.bclab.jchain.net.peering.PeerManager;
 import de.hpi.bclab.jchain.net.peering.multicast.MulticastPeerManager;
@@ -54,10 +54,10 @@ public class App
         		
         //SHARED RESOURCES for PRODUCER / CONSUMER DESIGN PATTERN
         List<Peer> peers = Collections.synchronizedList(new ArrayList<Peer>());
-    	LinkedBlockingQueue<Transaction> txPool = new LinkedBlockingQueue<Transaction>();
+    	LinkedBlockingQueue<Transaction> txIn = new LinkedBlockingQueue<Transaction>();
+    	LinkedBlockingQueue<Transaction> txOut = new LinkedBlockingQueue<Transaction>();
     	LinkedBlockingQueue<ConsensusMessage> cnsIn = new LinkedBlockingQueue<ConsensusMessage>();
     	LinkedBlockingQueue<ConsensusMessage> cnsOut = new LinkedBlockingQueue<ConsensusMessage>();
-    	LinkedBlockingQueue<Command> cmdPool = new LinkedBlockingQueue<Command>();
         
     	//THREAD POOL
 		ExecutorService executor = Executors.newFixedThreadPool(4);
@@ -78,22 +78,23 @@ public class App
 		executor.execute(peering);
         
         //MESSAGING
-    	executor.execute(new MessagingManager(config, peers, txPool, cnsIn, cnsOut, cmdPool));
-        
+    	executor.execute(new MessagingServer(txIn, cnsIn, 7499));
+    	executor.execute(new MessagingClient(peers, txOut, cnsOut));
+
         //CONSENSUS
     	ConsensusManager consensus;
     	switch (config.getString("consensus")) {
 		case "nakamoto":
-			consensus = new NakamotoManager(config, state, txPool, cnsIn, cnsOut);
+			consensus = new NakamotoManager(config, state, txIn, cnsIn, cnsOut);
 			break;
 		default:
-			consensus = new NakamotoManager(config, state, txPool, cnsIn, cnsOut);
+			consensus = new NakamotoManager(config, state, txIn, cnsIn, cnsOut);
 			break;
 		}
         executor.execute(consensus);
         
         //CLI/RPC CONTROL
-        executor.execute(new CommandManager(config, state, cmdPool, peers));
+        executor.execute(new CommandManager(config, state, txOut, peers));
         
         executor.shutdown();
         
