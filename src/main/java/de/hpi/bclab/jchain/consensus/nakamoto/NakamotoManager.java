@@ -1,6 +1,8 @@
 package de.hpi.bclab.jchain.consensus.nakamoto;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.commons.configuration2.Configuration;
@@ -34,34 +36,10 @@ public class NakamotoManager implements ConsensusManager {
 	@Override
 	public void run() {
 		log.info("Starting Nakamoto ConsensusManager");
-		while(!Thread.currentThread().isInterrupted()) {
-			try {
-				ArrayList<Transaction> txList = new ArrayList<>();
-
-				//fill txlist until the block is full or no tx are in the pool
-				while(config.getInt("blocksize") > txList.size() && !txPool.isEmpty()) {
-					txList.add(txPool.take());
-				}
-				//create new block and find nonce to fit difficulty
-				Block newBlock = new Block(blockchain.getHead().getHash(), blockchain.getDifficulty(), txList);
-				newBlock.mineBlock(); 
-				log.info("Found new Block: " + newBlock.getHash());
-				//add it to the blockchain
-				if (blockchain.addBlock(newBlock)) {
-					//apply to state
-					for(Transaction tx : txList) {
-						state.applyTransaction(tx);	
-					}
-				}
-				
-				//broadcast block
-				cnsOut.put(new ConsensusMessage(newBlock));
-
-				
-			} catch (InterruptedException e) {
-				log.info("Shutting down Nakamoto Consensus Manager");
-			}
-		}
+		ExecutorService executor = Executors.newFixedThreadPool(2);
+		//could consider an interrupt when a new head is synced
+		executor.execute(new Mining(config, txPool, blockchain, state, cnsOut));
+		executor.execute(new Syncing(cnsIn, blockchain));
 	}
 
 }

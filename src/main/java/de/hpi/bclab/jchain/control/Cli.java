@@ -31,7 +31,8 @@ public class Cli {
 		options.addOption("c", "config", true, "load config");
 		options.addOption("p", "port", true, "set port");
 		options.addOption("rp", "rpcport", true, "set rpcport");
-		options.addOption("rpc", "rpcport", false, "set rpc enabled");
+		options.addOption("rpc", "rpc", false, "set rpc enabled");
+		options.addOption("m", "mining", false, "set mining enabled");
 		options.addOption("bs", "bootstrap", true, "set bootstrap node address");
 		options.addOption("g", "group", true, "set multicast group");
 		options.addOption("cns", "consensusmode", true, "set consensus mode");
@@ -66,6 +67,13 @@ public class Cli {
 			}
 			else {
 				config.addProperty("rpc", false);
+			}
+			
+			if(cmd.hasOption("m")) {
+				config.addProperty("mining", true);
+			}
+			else {
+				config.addProperty("mining", false);
 			}
 			
 			if(cmd.hasOption("p")) {

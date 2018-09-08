@@ -13,7 +13,7 @@ public class Blockchain {
 	
 	private static final Logger log = Logger.getLogger(Blockchain.class.getName());
 	
-	private static final int DIFFICULTY_WINDOW = 5;
+	private static final int DIFFICULTY_WINDOW = 50;
 	private static final int BLOCKTIME = 10000;
 	
 	private String difficulty;
@@ -65,7 +65,7 @@ public class Blockchain {
 	 * @param block The Block to be added to the Blockchain
 	 * @return Returns true if the added block becomes the new head other returns false
 	 */
-	public boolean addBlock(Block block) {
+	public synchronized boolean addBlock(Block block) {
 		Node<Block> node = new Node<Block>();
 		node.block = block;
 		Node<Block> prev = findHash(root, block.getPrevHash());
