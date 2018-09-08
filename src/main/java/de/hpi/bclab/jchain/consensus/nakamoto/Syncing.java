@@ -20,15 +20,18 @@ public class Syncing implements Runnable{
 
 	@Override
 	public void run() {
-			ConsensusMessage cnsMsg;
-			while(!Thread.interrupted()) {
-				try {
-					cnsMsg = cnsIn.take();
-					blockchain.addBlock(cnsMsg.getBlock());
-				} catch (InterruptedException e) {
-					log.debug(e);
-				}
+		
+		log.info("Starting Syncing");
+	
+		ConsensusMessage cnsMsg;
+		while(!Thread.interrupted()) {
+			try {
+				cnsMsg = cnsIn.take();
+				blockchain.addBlock(cnsMsg.getBlock());
+			} catch (InterruptedException e) {
+				log.debug(e);
 			}
+		}
 
 	}
 }

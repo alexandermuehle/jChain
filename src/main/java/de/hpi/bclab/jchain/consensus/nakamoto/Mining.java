@@ -32,31 +32,37 @@ public class Mining implements Runnable{
 
 	@Override
 	public void run() {
+		
+		log.info("Starting Mining");
+		
 		try {
 			ArrayList<Transaction> txList = new ArrayList<>();
-			while(config.getBoolean("mining") && !Thread.interrupted()) {
-				//fill txlist until the block is full or no tx are in the pool
-				while(config.getInt("blocksize") > txList.size() && !txPool.isEmpty()) {
-					txList.add(txPool.take());
-				}
-				//create new block and find nonce to fit difficulty
-				Block newBlock = new Block(blockchain.getHead().getHash(), blockchain.getDifficulty(), txList);
-				mine(newBlock);
-				log.info("Found new Block: " + newBlock.getHash());
-				//add it to the blockchain
-				if (blockchain.addBlock(newBlock)) {
-					//apply to state
-					for(Transaction tx : txList) {
-						state.applyTransaction(tx);	
+			while(!Thread.interrupted()) {
+				while(config.getBoolean("mining")) {
+					//fill txlist until the block is full or no tx are in the pool
+					while(config.getInt("blocksize") > txList.size() && !txPool.isEmpty()) {
+						txList.add(txPool.take());
 					}
-				}
+					//create new block and find nonce to fit difficulty
+					Block newBlock = new Block(blockchain.getHead().getHash(), blockchain.getDifficulty(), txList);
+					mine(newBlock);
+					log.info("Found new Block: " + newBlock.getHash());
+					//add it to the blockchain
+					if (blockchain.addBlock(newBlock)) {
+						//apply to state
+						for(Transaction tx : txList) {
+							state.applyTransaction(tx);	
+						}
+					}
 
-				//broadcast block
-				cnsOut.put(new ConsensusMessage(newBlock));	
+					//broadcast block
+					cnsOut.put(new ConsensusMessage(newBlock));	
+				}
 			}
 		} catch (InterruptedException e) {
-			log.info("Shutting down Nakamoto Consensus Manager");
+			log.info("Stopping Mining");
 		}
+		log.info("Stopping Mining");
 	}
 	
 	private long mine(Block block) {

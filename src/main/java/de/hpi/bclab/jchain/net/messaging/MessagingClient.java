@@ -30,6 +30,9 @@ public class MessagingClient implements Runnable {
 
 	@Override
 	public void run() {
+		
+		log.info("Starting Messaging Client");
+		
 		ExecutorService executor = Executors.newFixedThreadPool(2);	
 		//SEND TX
 		Runnable txTask = () -> {

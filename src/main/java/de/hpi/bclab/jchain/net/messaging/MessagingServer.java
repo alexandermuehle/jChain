@@ -29,6 +29,8 @@ public class MessagingServer implements Runnable {
 	
 	public void run() {
 		
+		log.info("Starting Messaging Server");
+		
 		ServerSocket socket = null;
 		Socket client = null;
 		
