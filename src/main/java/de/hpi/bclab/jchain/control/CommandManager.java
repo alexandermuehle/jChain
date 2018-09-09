@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import com.github.arteam.simplejsonrpc.server.JsonRpcServer;
 
 import de.hpi.bclab.jchain.control.rpcservices.AccountService;
+import de.hpi.bclab.jchain.control.rpcservices.ConfigService;
 import de.hpi.bclab.jchain.control.rpcservices.NetworkService;
 import de.hpi.bclab.jchain.net.peering.Peer;
 import de.hpi.bclab.jchain.statemachine.State;
@@ -37,6 +38,7 @@ public class CommandManager implements Runnable{
 	private State state;
 	private LinkedBlockingQueue<Transaction> txOut;
 	private List<Peer> peers;
+	private Configuration config;
 	private boolean listening;
 	private int rpcPort;
 
@@ -44,6 +46,7 @@ public class CommandManager implements Runnable{
 		this.txOut = txOut;
 		this.peers = peers;
 		this.state = state;
+		this.config = config;
 		this.listening = config.getBoolean("rpc");
 		this.rpcPort = config.getInt("rpcport");
 	}
@@ -54,6 +57,7 @@ public class CommandManager implements Runnable{
 		log.info("Starting Command Manager");
 		AccountService accountService = new AccountService(txOut, state);
 		NetworkService  networkService = new NetworkService(peers);
+		ConfigService configService = new ConfigService(config);
 		JsonRpcServer rpcServer = new JsonRpcServer();		
 		
 		//RPC
@@ -91,6 +95,7 @@ public class CommandManager implements Runnable{
 		        String answer = ""; 
 		        if (payload.toString().contains("acc_")) answer = rpcServer.handle(payload.toString(), accountService);
 		        else if (payload.toString().contains("net_")) answer = rpcServer.handle(payload.toString(), networkService);
+		        else if (payload.toString().contains("config_")) answer = rpcServer.handle(payload.toString(), configService);
 		        else {	
 		        	answer = rpcServer.handle(payload.toString(), accountService);
 		        }
@@ -104,6 +109,7 @@ public class CommandManager implements Runnable{
 		        out.write("\r\n");
 				out.write(answer);
 				out.flush();
+				//close
 				in.close();
 				out.close();
 				client.close();
