@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.sync.ReadWriteSynchronizer;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -42,6 +43,7 @@ public class App
         
         //CONFIG
         Configuration config = new Cli(args).parse();
+        config.setSynchronizer(new ReadWriteSynchronizer());
     	
         //STATE
         State state;
