@@ -27,7 +27,7 @@ public class Syncing implements Runnable{
 		while(!Thread.interrupted()) {
 			try {
 				cnsMsg = cnsIn.take();
-				blockchain.addBlock(cnsMsg.getBlock());
+				blockchain.addBlock(((BlockMessage) cnsMsg).getBlock());
 			} catch (InterruptedException e) {
 				log.debug(e);
 			}

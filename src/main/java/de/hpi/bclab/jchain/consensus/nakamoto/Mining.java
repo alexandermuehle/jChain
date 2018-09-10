@@ -56,7 +56,7 @@ public class Mining implements Runnable{
 					}
 
 					//broadcast block
-					cnsOut.put(new ConsensusMessage(newBlock));	
+					cnsOut.put(new BlockMessage(newBlock));	
 				}
 			}
 		} catch (InterruptedException e) {

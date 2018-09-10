@@ -10,6 +10,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import de.hpi.bclab.jchain.messages.ConsensusMessage;
 import de.hpi.bclab.jchain.net.peering.Peer;
 import de.hpi.bclab.jchain.statemachine.Transaction;
@@ -37,15 +40,18 @@ public class MessagingClient implements Runnable {
 		//SEND TX
 		Runnable txTask = () -> {
 			Transaction tx;
+			String txJson;
+			Gson gson = new GsonBuilder().create();
 			while(!Thread.interrupted()) {
 				try {
 					tx = txOut.take();
+					txJson = gson.toJson(tx);
 					Socket clientSocket = null;
 						for (Peer peer : peers) {
 							log.info("Sending " + tx + " to " + peer);
 							clientSocket = new Socket(peer.getAdr(), peer.getPort());
 							ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
-//							out.writeObject(tx); //TODO: replace with gson
+							out.writeObject(txJson);
 							clientSocket.close();
 							out.close();
 						}
@@ -61,15 +67,19 @@ public class MessagingClient implements Runnable {
 			
 		//SEND CNS
 		Runnable cnsTask = () -> {
+			ConsensusMessage cnsMsg;
+			String cnsJson;
+			Gson gson = new GsonBuilder().create();
 			while(!Thread.interrupted()) {
 				try {
-					ConsensusMessage cnsMsg = cnsOut.take();
+					cnsMsg = cnsOut.take();
+					cnsJson = gson.toJson(cnsMsg);
 					Socket clientSocket = null;
 					for (Peer peer : peers) {
 						log.info("Sending " + cnsMsg + " to " + peer);
 						clientSocket = new Socket(peer.getAdr(), peer.getPort());
 						ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
-//						out.writeObject(tx); //TODO: replace with gson
+						out.writeObject(cnsJson);
 						clientSocket.close();
 						out.close();
 					}

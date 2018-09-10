@@ -25,7 +25,6 @@ public @JsonRpcService class AccountService{
 	public @JsonRpcMethod boolean acc_send(@JsonRpcParam("to") int receiver, @JsonRpcParam("value") int value) {
 		try {
 			txPool.put(new AccountTransaction(receiver, value));
-			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
