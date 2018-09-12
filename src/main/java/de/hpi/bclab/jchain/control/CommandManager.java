@@ -20,7 +20,8 @@ import com.github.arteam.simplejsonrpc.server.JsonRpcServer;
 import de.hpi.bclab.jchain.control.rpcservices.AccountService;
 import de.hpi.bclab.jchain.control.rpcservices.ConfigService;
 import de.hpi.bclab.jchain.control.rpcservices.NetworkService;
-import de.hpi.bclab.jchain.net.peering.Peer;
+import de.hpi.bclab.jchain.messaging.Message;
+import de.hpi.bclab.jchain.peering.Peer;
 import de.hpi.bclab.jchain.statemachine.State;
 import de.hpi.bclab.jchain.statemachine.Transaction;
 
@@ -36,14 +37,16 @@ public class CommandManager implements Runnable{
 	private static final Logger log = Logger.getLogger(CommandManager.class.getName());
 	
 	private State state;
-	private LinkedBlockingQueue<Transaction> txOut;
+	private LinkedBlockingQueue<Message> msgOut;
+	private LinkedBlockingQueue<Transaction> txIn;
 	private List<Peer> peers;
 	private Configuration config;
 	private boolean listening;
 	private int rpcPort;
 
-	public CommandManager(Configuration config, State state, LinkedBlockingQueue<Transaction> txOut, List<Peer> peers) {
-		this.txOut = txOut;
+	public CommandManager(Configuration config, State state, LinkedBlockingQueue<Transaction> txIn, LinkedBlockingQueue<Message> msgOut, List<Peer> peers) {
+		this.msgOut = msgOut;
+		this.txIn = txIn;
 		this.peers = peers;
 		this.state = state;
 		this.config = config;
@@ -55,7 +58,7 @@ public class CommandManager implements Runnable{
 	public void run() {
 		
 		log.info("Starting Command Manager");
-		AccountService accountService = new AccountService(txOut, state);
+		AccountService accountService = new AccountService(txIn, msgOut, state);
 		NetworkService  networkService = new NetworkService(peers);
 		ConfigService configService = new ConfigService(config);
 		JsonRpcServer rpcServer = new JsonRpcServer();		

@@ -13,16 +13,17 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.hpi.bclab.jchain.consensus.ConsensusManager;
+import de.hpi.bclab.jchain.consensus.ConsensusMessage;
 import de.hpi.bclab.jchain.consensus.nakamoto.NakamotoManager;
 import de.hpi.bclab.jchain.control.Cli;
 import de.hpi.bclab.jchain.control.CommandManager;
-import de.hpi.bclab.jchain.messages.ConsensusMessage;
-import de.hpi.bclab.jchain.net.messaging.MessagingClient;
-import de.hpi.bclab.jchain.net.messaging.MessagingServer;
-import de.hpi.bclab.jchain.net.peering.Peer;
-import de.hpi.bclab.jchain.net.peering.PeerManager;
-import de.hpi.bclab.jchain.net.peering.multicast.MulticastPeerManager;
-import de.hpi.bclab.jchain.net.peering.unstructured.UnstructuredPeerManager;
+import de.hpi.bclab.jchain.messaging.Message;
+import de.hpi.bclab.jchain.messaging.MessagingClient;
+import de.hpi.bclab.jchain.messaging.MessagingServer;
+import de.hpi.bclab.jchain.peering.Peer;
+import de.hpi.bclab.jchain.peering.PeerManager;
+import de.hpi.bclab.jchain.peering.multicast.MulticastPeerManager;
+import de.hpi.bclab.jchain.peering.unstructured.UnstructuredPeerManager;
 import de.hpi.bclab.jchain.statemachine.State;
 import de.hpi.bclab.jchain.statemachine.Transaction;
 import de.hpi.bclab.jchain.statemachine.accountmodel.AccountState;
@@ -57,9 +58,8 @@ public class App
         //SHARED RESOURCES for PRODUCER / CONSUMER DESIGN PATTERN
         List<Peer> peers = Collections.synchronizedList(new ArrayList<Peer>());
     	LinkedBlockingQueue<Transaction> txIn = new LinkedBlockingQueue<Transaction>();
-    	LinkedBlockingQueue<Transaction> txOut = new LinkedBlockingQueue<Transaction>();
     	LinkedBlockingQueue<ConsensusMessage> cnsIn = new LinkedBlockingQueue<ConsensusMessage>();
-    	LinkedBlockingQueue<ConsensusMessage> cnsOut = new LinkedBlockingQueue<ConsensusMessage>();
+    	LinkedBlockingQueue<Message> msgOut = new LinkedBlockingQueue<Message>();
         
     	//THREAD POOL
 		ExecutorService executor = Executors.newFixedThreadPool(5);
@@ -81,22 +81,22 @@ public class App
         
         //MESSAGING
     	executor.execute(new MessagingServer(txIn, cnsIn, 7499));
-    	executor.execute(new MessagingClient(peers, txOut, cnsOut));
+    	executor.execute(new MessagingClient(peers, msgOut));
 
         //CONSENSUS
     	ConsensusManager consensus;
     	switch (config.getString("consensus")) {
 		case "nakamoto":
-			consensus = new NakamotoManager(config, state, txIn, cnsIn, cnsOut);
+			consensus = new NakamotoManager(config, state, txIn, cnsIn, msgOut);
 			break;
 		default:
-			consensus = new NakamotoManager(config, state, txIn, cnsIn, cnsOut);
+			consensus = new NakamotoManager(config, state, txIn, cnsIn, msgOut);
 			break;
 		}
         executor.execute(consensus);
         
         //CLI/RPC CONTROL
-        executor.execute(new CommandManager(config, state, txOut, peers));
+        executor.execute(new CommandManager(config, state, txIn, msgOut, peers));
         
         executor.shutdown();
         

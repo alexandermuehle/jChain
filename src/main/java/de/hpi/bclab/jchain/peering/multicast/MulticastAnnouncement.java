@@ -1,4 +1,4 @@
-package de.hpi.bclab.jchain.net.peering.multicast;
+package de.hpi.bclab.jchain.peering.multicast;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

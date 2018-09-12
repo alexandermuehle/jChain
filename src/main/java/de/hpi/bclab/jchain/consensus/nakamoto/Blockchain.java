@@ -3,7 +3,6 @@ package de.hpi.bclab.jchain.consensus.nakamoto;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -25,7 +24,7 @@ public class Blockchain {
 	 * The Blockchain holds a tree structure of all received Blocks
 	 */
 	public Blockchain () {
-		difficulty = "05f39d8f5cd7a11e914eb19410540d1e59647eb08f391ef615ced7be08971a05";
+		difficulty = "00039d8f5cd7a11e914eb19410540d1e59647eb08f391ef615ced7be08971a05";
 		root = new Node<Block>();
 		root.block = new Block("0", difficulty, new ArrayList<Transaction>());
 		root.block.setHash(HashUtil.blockHash("0", root.block.getNonce(), root.block.getTimestamp(), root.block.getTransactions()));
@@ -117,7 +116,7 @@ public class Blockchain {
 		private Block block;
 		private Node<Block> parent;
 		private int depth;
-		private List<Node<Block>> children = new ArrayList<Node<Block>>();
+		private ArrayList<Node<Block>> children = new ArrayList<Node<Block>>();
 	}
 
 }

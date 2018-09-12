@@ -8,7 +8,8 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.log4j.Logger;
 
 import de.hpi.bclab.jchain.consensus.ConsensusManager;
-import de.hpi.bclab.jchain.messages.ConsensusMessage;
+import de.hpi.bclab.jchain.consensus.ConsensusMessage;
+import de.hpi.bclab.jchain.messaging.Message;
 import de.hpi.bclab.jchain.statemachine.State;
 import de.hpi.bclab.jchain.statemachine.Transaction;
 
@@ -21,9 +22,9 @@ public class NakamotoManager implements ConsensusManager {
 	private Blockchain blockchain;
 	private LinkedBlockingQueue<Transaction> txPool;
 	private LinkedBlockingQueue<ConsensusMessage> cnsIn;	
-	private LinkedBlockingQueue<ConsensusMessage> cnsOut;
+	private LinkedBlockingQueue<Message> cnsOut;
 
-	public NakamotoManager(Configuration config, State state, LinkedBlockingQueue<Transaction> txPool, LinkedBlockingQueue<ConsensusMessage> cnsIn, LinkedBlockingQueue<ConsensusMessage> cnsOut) {
+	public NakamotoManager(Configuration config, State state, LinkedBlockingQueue<Transaction> txPool, LinkedBlockingQueue<ConsensusMessage> cnsIn, LinkedBlockingQueue<Message> cnsOut) {
 		this.config = config;
 		this.state = state;
 		this.txPool = txPool;

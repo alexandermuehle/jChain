@@ -5,7 +5,7 @@ import java.util.List;
 import com.github.arteam.simplejsonrpc.core.annotation.JsonRpcMethod;
 import com.github.arteam.simplejsonrpc.core.annotation.JsonRpcService;
 
-import de.hpi.bclab.jchain.net.peering.Peer;
+import de.hpi.bclab.jchain.peering.Peer;
 
 public @JsonRpcService class NetworkService {
 	

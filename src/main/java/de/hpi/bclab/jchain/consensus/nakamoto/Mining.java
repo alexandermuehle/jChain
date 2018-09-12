@@ -7,7 +7,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.log4j.Logger;
 
-import de.hpi.bclab.jchain.messages.ConsensusMessage;
+import de.hpi.bclab.jchain.messaging.Message;
 import de.hpi.bclab.jchain.statemachine.State;
 import de.hpi.bclab.jchain.statemachine.Transaction;
 import de.hpi.bclab.jchain.util.HashUtil;
@@ -20,9 +20,9 @@ public class Mining implements Runnable{
 	private LinkedBlockingQueue<Transaction> txPool;
 	private Blockchain blockchain;
 	private State state;
-	private LinkedBlockingQueue<ConsensusMessage> cnsOut;
+	private LinkedBlockingQueue<Message> cnsOut;
 	
-	public Mining(Configuration config, LinkedBlockingQueue<Transaction> txPool, Blockchain blockchain, State state, LinkedBlockingQueue<ConsensusMessage> cnsOut) {
+	public Mining(Configuration config, LinkedBlockingQueue<Transaction> txPool, Blockchain blockchain, State state, LinkedBlockingQueue<Message> cnsOut) {
 		this.config = config;
 		this.txPool = txPool;
 		this.blockchain = blockchain;

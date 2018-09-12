@@ -7,4 +7,4 @@
  * @author Alexander Mühle
  *
  */
-package de.hpi.bclab.jchain.net.messaging;
+package de.hpi.bclab.jchain.messaging;

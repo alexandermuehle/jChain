@@ -1,11 +1,11 @@
-package de.hpi.bclab.jchain.net.peering.multicast;
+package de.hpi.bclab.jchain.peering.multicast;
 
 import java.net.DatagramPacket;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import de.hpi.bclab.jchain.net.peering.Peer;
+import de.hpi.bclab.jchain.peering.Peer;
 
 public class AnnouncementHandler implements Runnable{
 	

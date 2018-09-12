@@ -4,7 +4,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 
-import de.hpi.bclab.jchain.messages.ConsensusMessage;
+import de.hpi.bclab.jchain.consensus.ConsensusMessage;
 
 public class Syncing implements Runnable{
 	

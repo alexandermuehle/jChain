@@ -1,12 +1,13 @@
 package de.hpi.bclab.jchain.consensus.nakamoto;
 
-import de.hpi.bclab.jchain.messages.ConsensusMessage;
+import de.hpi.bclab.jchain.consensus.ConsensusMessage;
 
 public class BlockMessage extends ConsensusMessage {
 	
 	private Block block;
 
 	public BlockMessage(Block block) {
+		super("nakamoto");
 		this.block = block;
 	}
 

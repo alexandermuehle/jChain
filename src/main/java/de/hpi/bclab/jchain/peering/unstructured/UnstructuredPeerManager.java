@@ -1,11 +1,11 @@
-package de.hpi.bclab.jchain.net.peering.unstructured;
+package de.hpi.bclab.jchain.peering.unstructured;
 
 import java.util.List;
 
 import org.apache.commons.configuration2.Configuration;
 
-import de.hpi.bclab.jchain.net.peering.Peer;
-import de.hpi.bclab.jchain.net.peering.PeerManager;
+import de.hpi.bclab.jchain.peering.Peer;
+import de.hpi.bclab.jchain.peering.PeerManager;
 
 public class UnstructuredPeerManager implements PeerManager{
 	

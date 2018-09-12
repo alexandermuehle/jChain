@@ -1,4 +1,4 @@
-package de.hpi.bclab.jchain.net.peering.multicast;
+package de.hpi.bclab.jchain.peering.multicast;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.log4j.Logger;
 
-import de.hpi.bclab.jchain.net.peering.Peer;
-import de.hpi.bclab.jchain.net.peering.PeerManager;
+import de.hpi.bclab.jchain.peering.Peer;
+import de.hpi.bclab.jchain.peering.PeerManager;
 
 /**
  * Vulnerable to eclipse attacks through connection monopolisation because there are only incoming announcments

@@ -7,4 +7,4 @@
  * @author Alexander Mühle
  *
  */
-package de.hpi.bclab.jchain.net.peering;
+package de.hpi.bclab.jchain.peering;

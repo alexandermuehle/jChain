@@ -1,4 +1,4 @@
-package de.hpi.bclab.jchain.net.peering.multicast;
+package de.hpi.bclab.jchain.peering.multicast;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 
 import org.apache.log4j.Logger;
 
-import de.hpi.bclab.jchain.net.peering.Peer;
+import de.hpi.bclab.jchain.peering.Peer;
 
 /**
  * MulticastDiscovery is responsible for listening to the {@link MulticastAnnouncement} Multicast group and handing received packets to a new {@link AnnouncementHandler} Thread 

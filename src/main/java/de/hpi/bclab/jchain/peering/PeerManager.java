@@ -1,4 +1,4 @@
-package de.hpi.bclab.jchain.net.peering;
+package de.hpi.bclab.jchain.peering;
 
 import java.util.List;
 

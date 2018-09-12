@@ -1,4 +1,4 @@
-package de.hpi.bclab.jchain.net.messaging;
+package de.hpi.bclab.jchain.messaging;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -9,7 +9,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
 
-import de.hpi.bclab.jchain.messages.ConsensusMessage;
+import de.hpi.bclab.jchain.consensus.ConsensusMessage;
 import de.hpi.bclab.jchain.statemachine.Transaction;
 
 
