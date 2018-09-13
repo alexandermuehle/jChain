@@ -15,11 +15,11 @@ public class Block {
 	
 	private String hash;
 	
-	public Block(String prevHash, String difficulty, ArrayList<Transaction> txs) {
+	public Block(String prevHash, String difficulty, long timestamp, ArrayList<Transaction> txs) {
 		this.prevHash = prevHash;
 		this.difficulty = difficulty;
 		this.nonce = 0;
-		this.timestamp = new Date().getTime();
+		this.timestamp = timestamp;
 		this.txs = txs;
 	}
 	

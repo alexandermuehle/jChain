@@ -44,7 +44,7 @@ public class Mining implements Runnable{
 						txList.add(txPool.take());
 					}
 					//create new block and find nonce to fit difficulty
-					Block newBlock = new Block(blockchain.getHead().getHash(), blockchain.getDifficulty(), txList);
+					Block newBlock = new Block(blockchain.getHead().getHash(), blockchain.getDifficulty(), new Date().getTime(), txList);
 					mine(newBlock);
 					log.info("Found new Block: " + newBlock.getHash());
 					//add it to the blockchain

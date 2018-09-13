@@ -24,12 +24,11 @@ public class Blockchain {
 	 * The Blockchain holds a tree structure of all received Blocks
 	 */
 	public Blockchain () {
-		difficulty = "00039d8f5cd7a11e914eb19410540d1e59647eb08f391ef615ced7be08971a05";
+		difficulty = "00000d8f5cd7a11e914eb19410540d1e59647eb08f391ef615ced7be08971a05";
 		root = new Node<Block>();
-		root.block = new Block("0", difficulty, new ArrayList<Transaction>());
+		root.block = new Block("0", difficulty, 0,new ArrayList<Transaction>());
 		root.block.setHash(HashUtil.blockHash("0", root.block.getNonce(), root.block.getTimestamp(), root.block.getTransactions()));
 		root.depth = 0;
-		root.children = new ArrayList<Node<Block>>();
 		head = root;
 	}
 	
@@ -70,6 +69,11 @@ public class Blockchain {
 		Node<Block> node = new Node<Block>();
 		node.block = block;
 		Node<Block> prev = findHash(root, block.getPrevHash());
+		if(prev == null) {
+			log.info("Couldn't add block " + block.getHash() + " to the Blockchain");
+			log.info("Block.prevHash " + block.getPrevHash());
+			return false;
+		}
 		node.parent = prev;
 		prev.children.add(node);
 		node.depth = prev.depth + 1;
@@ -81,9 +85,8 @@ public class Blockchain {
 		if (node.depth > head.depth) {
 			log.info("New Head for Blockchain: " + node.block.getHash());
 			head = node;
-			return true;
 		}
-		return false;
+		return true;
 	}
 	
 	/**

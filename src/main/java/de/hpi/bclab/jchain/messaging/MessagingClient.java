@@ -2,9 +2,7 @@ package de.hpi.bclab.jchain.messaging;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.net.Socket;
 import java.util.List;
