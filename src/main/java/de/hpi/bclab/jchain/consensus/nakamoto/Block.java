@@ -1,7 +1,6 @@
 package de.hpi.bclab.jchain.consensus.nakamoto;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import de.hpi.bclab.jchain.statemachine.Transaction;
 
@@ -53,6 +52,10 @@ public class Block {
 
 	public ArrayList<Transaction> getTransactions() {
 		return this.txs;
+	}
+
+	public void setNonce(long nonce) {
+		this.nonce = nonce;
 	}
 
 

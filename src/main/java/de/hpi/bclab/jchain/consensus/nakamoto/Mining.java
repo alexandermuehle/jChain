@@ -46,7 +46,7 @@ public class Mining implements Runnable{
 					//create new block and find nonce to fit difficulty
 					Block newBlock = new Block(blockchain.getHead().getHash(), blockchain.getDifficulty(), new Date().getTime(), txList);
 					mine(newBlock);
-					log.info("Found new Block: " + newBlock.getHash());
+					log.info("Found new Block: " + newBlock.getHash() + " with nonce " + newBlock.getNonce());
 					//add it to the blockchain
 					if (blockchain.addBlock(newBlock)) {
 						//apply to state
@@ -77,8 +77,8 @@ public class Mining implements Runnable{
 			}
 			hash = HashUtil.blockHash(block.getPrevHash(), block.getTimestamp(), nonce, block.getTransactions());
 		}
+		block.setNonce(nonce);
 		block.setHash(hash);
-		log.info("nonce found: " + nonce);
 		return nonce;
 	}
 	

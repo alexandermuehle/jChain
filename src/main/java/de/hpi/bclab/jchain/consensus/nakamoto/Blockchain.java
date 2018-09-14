@@ -72,19 +72,23 @@ public class Blockchain {
 		if(prev == null) {
 			log.info("Couldn't add block " + block.getHash() + " to the Blockchain");
 			log.info("Block.prevHash " + block.getPrevHash());
+			//TODO stash away block that couldn't be added for later use
 			return false;
 		}
 		node.parent = prev;
 		prev.children.add(node);
 		node.depth = prev.depth + 1;
-		//update difficulty if needed
-		if (node.depth % DIFFICULTY_WINDOW == 0) {
+		//update difficulty if needed (-1 to exclude genesis which has timestamp 0)
+		if (node.depth - 1 % DIFFICULTY_WINDOW == 0 && node.depth != 1) {
 			this.difficulty = calculateDifficulty();
 		}
 		//update head if needed
 		if (node.depth > head.depth) {
 			log.info("New Head for Blockchain: " + node.block.getHash());
 			head = node;
+		}
+		else {
+			log.info("Block " + node.block.getHash() + " added in fork at Block " + node.block.getPrevHash());
 		}
 		return true;
 	}
@@ -102,7 +106,8 @@ public class Blockchain {
 		}
 		Node<Block> res = null;
 		for(Node<Block> child : last.children) {
-			res = findHash(child, hash);	
+			res = findHash(child, hash);
+			if(res != null) break;
 		}
 		return res;
 	}

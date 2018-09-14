@@ -14,5 +14,9 @@ public class BlockMessage extends ConsensusMessage {
 	public Block getBlock() {
 		return this.block;
 	}
+	
+	public String toString() {
+		return block.getHash();
+	}
 
 }
